@@ -1,6 +1,15 @@
 import { UploadCloud } from "lucide-react";
 
-export default function UploadBox() {
+export default function UploadBox({ onFileSelect }) {
+
+    const handleFileChange = (e) => {
+        const file = e.target .files[0];
+
+        if (file) {
+            onFileSelect(file);
+        }
+    };
+
     return (
         <div className="bg-white rounded-3xl border-2 border-dashed border-gray-300 p-8 md:p-16 flex flex-col items-center justify-center text-center">
 
@@ -16,13 +25,23 @@ export default function UploadBox() {
 
             {/* Description */}
             <p className="mt-4 text-gray-600 max-w-md">
-                Upload PDF, DOCX, or RTF files. Ensure text is selectable for best AI extraction.
+                Upload PDF files. Ensure text is selectable for best AI extraction.
             </p>
 
+            {/* Hidden File Input */}
+            <input
+                type="file"
+                id="cv-upload"
+                className="hidden"
+                accept=".pdf"
+                onChange={handleFileChange}
+            />
+
             {/* Button */}
-            <button className="mt-8 bg-gray-100 hover:bg-gray-200 transition px-6 py-3 rounded-xl font-medium">
+            <label htmlFor="cv-upload"
+            className="mt-8 bg-gray-100 hover:bg-gray-200 transition px-6 py-3 rounded-xl font-medium cursor-pointer">
                 Browse Files
-            </button>
+            </label>
         </div>
     );
 }

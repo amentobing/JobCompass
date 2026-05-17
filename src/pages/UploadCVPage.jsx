@@ -4,8 +4,10 @@ import UploadBox from "../components/upload/UploadBox";
 import TextInputSection from "../components/upload/TextInputSection";
 import UploadedFileCard from "../components/upload/UploadedFileCard";
 import AnalysisCard from "../components/upload/AnalysisCard";
+import { useState } from "react";
 
 export default function UploadCVPage() {
+    const [selectedFile, setSelectedFile] = useState(null);
     return (
         <div className="min-h-screen bg-[#f5f7fb] flex flex-col lg:flex-row">
 
@@ -65,7 +67,7 @@ export default function UploadCVPage() {
 
                 {/* Upload Box */}
                 <div className="mt-10">
-                    <UploadBox />
+                    <UploadBox onFileSelect={setSelectedFile} />
                 </div>
 
                 {/* Divider */}
@@ -82,17 +84,15 @@ export default function UploadCVPage() {
 
                 {/* Text Input */}
                 <TextInputSection />
-
-                {/* Bottom Section */}
                 <div className="grid grid-cols-1 lg:grid-cols-3 gap-8 mt-10">
 
                     {/* Left */}
                     <div className="lg:col-span-2">
-                        <UploadedFileCard />
+                        <UploadedFileCard file={selectedFile} />
                     </div>
 
                     {/* Right */}
-                    <AnalysisCard />
+                    <AnalysisCard file={selectedFile} />
                 </div>
             </div>
         </div>
