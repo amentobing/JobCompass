@@ -104,7 +104,7 @@ export default function Sidebar() {
             )}
 
             {/* DESKTOP SIDEBAR */}
-            <div className="hidden lg:flex w-[260px] min-h-screen bg-white border-r p-6 flex-col justify-between">
+            <div className="hidden lg:flex fixed left-0 top-0 w-[260px] h-screen bg-white border-r p-6 flex-col justify-between">
 
                 {/* Top */}
                 <div>

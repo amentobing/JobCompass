@@ -15,9 +15,9 @@ export default function UploadCVPage() {
             <Sidebar />
 
             {/* Main Content */}
-            <div className="flex-1 p-8">
+            <div className="w-full lg:ml-[260px] flex-1 p-4 md:p-8 h-screen overflow-y-auto">
 
-                <Topbar />
+                {/* <Topbar /> */}
 
                 {/* Header */}
                 <div className="mt-8">

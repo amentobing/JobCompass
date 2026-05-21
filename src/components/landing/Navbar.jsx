@@ -1,5 +1,6 @@
 import { Menu, X } from "lucide-react";
 import { useState } from "react";
+import { Link } from "react-router-dom";
 
 export default function Navbar() {
     const [isOpen, setIsOpen] = useState(false);
@@ -24,11 +25,11 @@ export default function Navbar() {
                         Dashboard
                     </a>
 
-                    <a href="#" className="hover:text-blue-700 transition">
+                    <a href="upload" className="hover:text-blue-700 transition">
                         Upload CV
                     </a>
 
-                    <a href="#" className="hover:text-blue-700 transition">
+                    <a href="dashboard" className="hover:text-blue-700 transition">
                         All Jobs
                     </a>
                 </div>
@@ -59,8 +60,8 @@ export default function Navbar() {
                 <div className="md:hidden mt-4 flex flex-col gap-4 px-2 pb-4 text-gray-700 font-medium">
 
                     <a href="#">Dashboard</a>
-                    <a href="#">Upload CV</a>
-                    <a href="#">All Jobs</a>
+                    <a href="upload">Upload CV</a>
+                    <a href="dashboard">All Jobs</a>
 
                     <button className="text-left text-blue-700">
                         Sign In
