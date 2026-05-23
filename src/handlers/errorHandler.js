@@ -2,8 +2,11 @@ import response from '../utils/response.js';
 import { ClientError } from '../exceptions/index.js';
 
 const errorHandler = (err, req, res, next) => {
-  const { confirmPass, ...body } = req.body;
+  const body = req.body ? (({ password, confirmPass, ...rest }) => rest)(req.body) : null;
   if (err instanceof ClientError) {
+    if (err.statusCode >= 500) {
+      console.error(err);
+    }
     return response(res, err.statusCode, err.message, body);
   }
 
@@ -13,6 +16,8 @@ const errorHandler = (err, req, res, next) => {
 
   const statusCode = err.statusCode || 500;
   const message = err.message || 'Internal Server Error';
+
+  console.error(err);
 
   return response(res, statusCode, message, null);
 };

@@ -1,0 +1,415 @@
+{
+  "format": "graph-model",
+  "generatedBy": "2.20.0",
+  "convertedBy": "TensorFlow.js Converter v4.22.0",
+  "signature": {
+    "inputs": { "skill_features": { "name": "skill_features:0", "dtype": "DT_FLOAT", "tensorShape": { "dim": [{ "size": "-1" }, { "size": "1500" }] } } },
+    "outputs": { "output_0": { "name": "Identity:0", "dtype": "DT_FLOAT", "tensorShape": { "dim": [{ "size": "-1" }, { "size": "9" }] } } }
+  },
+  "modelTopology": {
+    "node": [
+      {
+        "name": "StatefulPartitionedCall/JobCategoryClassifier_1/layer_norm_1/Reshape_1",
+        "op": "Const",
+        "attr": { "value": { "tensor": { "dtype": "DT_FLOAT", "tensorShape": { "dim": [{ "size": "1" }, { "size": "128" }] } } }, "dtype": { "type": "DT_FLOAT" } }
+      },
+      {
+        "name": "StatefulPartitionedCall/JobCategoryClassifier_1/noisy_dense_2_1/dense_3_1/Cast/ReadVariableOp",
+        "op": "Const",
+        "attr": { "value": { "tensor": { "dtype": "DT_FLOAT", "tensorShape": { "dim": [{ "size": "256" }, { "size": "128" }] } } }, "dtype": { "type": "DT_FLOAT" } }
+      },
+      {
+        "name": "StatefulPartitionedCall/JobCategoryClassifier_1/noisy_dense_2_1/dense_3_1/BiasAdd/ReadVariableOp",
+        "op": "Const",
+        "attr": { "value": { "tensor": { "dtype": "DT_FLOAT", "tensorShape": { "dim": [{ "size": "128" }] } } }, "dtype": { "type": "DT_FLOAT" } }
+      },
+      {
+        "name": "StatefulPartitionedCall/JobCategoryClassifier_1/noisy_dense_2_1/batch_normalization_3_1/batchnorm/mul",
+        "op": "Const",
+        "attr": { "value": { "tensor": { "dtype": "DT_FLOAT", "tensorShape": { "dim": [{ "size": "128" }] } } }, "dtype": { "type": "DT_FLOAT" } }
+      },
+      {
+        "name": "StatefulPartitionedCall/JobCategoryClassifier_1/noisy_dense_2_1/batch_normalization_3_1/batchnorm/sub",
+        "op": "Const",
+        "attr": { "value": { "tensor": { "dtype": "DT_FLOAT", "tensorShape": { "dim": [{ "size": "128" }] } } }, "dtype": { "type": "DT_FLOAT" } }
+      },
+      { "name": "StatefulPartitionedCall/JobCategoryClassifier_1/noisy_dense_2_1/l2_normalize/Sum/reduction_indices", "op": "Const", "attr": { "value": { "tensor": { "dtype": "DT_INT32", "tensorShape": {} } }, "dtype": { "type": "DT_INT32" } } },
+      { "name": "StatefulPartitionedCall/JobCategoryClassifier_1/noisy_dense_2_1/l2_normalize/Maximum/y", "op": "Const", "attr": { "value": { "tensor": { "dtype": "DT_FLOAT", "tensorShape": {} } }, "dtype": { "type": "DT_FLOAT" } } },
+      {
+        "name": "StatefulPartitionedCall/JobCategoryClassifier_1/proj_dense_1/Cast/ReadVariableOp",
+        "op": "Const",
+        "attr": { "value": { "tensor": { "dtype": "DT_FLOAT", "tensorShape": { "dim": [{ "size": "1500" }, { "size": "512" }] } } }, "dtype": { "type": "DT_FLOAT" } }
+      },
+      {
+        "name": "StatefulPartitionedCall/JobCategoryClassifier_1/proj_dense_1/BiasAdd/ReadVariableOp",
+        "op": "Const",
+        "attr": { "value": { "tensor": { "dtype": "DT_FLOAT", "tensorShape": { "dim": [{ "size": "512" }] } } }, "dtype": { "type": "DT_FLOAT" } }
+      },
+      { "name": "StatefulPartitionedCall/JobCategoryClassifier_1/proj_bn_1/batchnorm/mul", "op": "Const", "attr": { "value": { "tensor": { "dtype": "DT_FLOAT", "tensorShape": { "dim": [{ "size": "512" }] } } }, "dtype": { "type": "DT_FLOAT" } } },
+      { "name": "StatefulPartitionedCall/JobCategoryClassifier_1/proj_bn_1/batchnorm/sub", "op": "Const", "attr": { "value": { "tensor": { "dtype": "DT_FLOAT", "tensorShape": { "dim": [{ "size": "512" }] } } }, "dtype": { "type": "DT_FLOAT" } } },
+      {
+        "name": "StatefulPartitionedCall/JobCategoryClassifier_1/noisy_dense_1_1/dense_2_1/Cast/ReadVariableOp",
+        "op": "Const",
+        "attr": { "value": { "tensor": { "dtype": "DT_FLOAT", "tensorShape": { "dim": [{ "size": "512" }, { "size": "256" }] } } }, "dtype": { "type": "DT_FLOAT" } }
+      },
+      {
+        "name": "StatefulPartitionedCall/JobCategoryClassifier_1/noisy_dense_1_1/dense_2_1/BiasAdd/ReadVariableOp",
+        "op": "Const",
+        "attr": { "value": { "tensor": { "dtype": "DT_FLOAT", "tensorShape": { "dim": [{ "size": "256" }] } } }, "dtype": { "type": "DT_FLOAT" } }
+      },
+      {
+        "name": "StatefulPartitionedCall/JobCategoryClassifier_1/noisy_dense_1_1/batch_normalization_2_1/batchnorm/mul",
+        "op": "Const",
+        "attr": { "value": { "tensor": { "dtype": "DT_FLOAT", "tensorShape": { "dim": [{ "size": "256" }] } } }, "dtype": { "type": "DT_FLOAT" } }
+      },
+      {
+        "name": "StatefulPartitionedCall/JobCategoryClassifier_1/noisy_dense_1_1/batch_normalization_2_1/batchnorm/sub",
+        "op": "Const",
+        "attr": { "value": { "tensor": { "dtype": "DT_FLOAT", "tensorShape": { "dim": [{ "size": "256" }] } } }, "dtype": { "type": "DT_FLOAT" } }
+      },
+      { "name": "StatefulPartitionedCall/JobCategoryClassifier_1/noisy_dense_1_1/l2_normalize/Sum/reduction_indices", "op": "Const", "attr": { "value": { "tensor": { "dtype": "DT_INT32", "tensorShape": {} } }, "dtype": { "type": "DT_INT32" } } },
+      { "name": "StatefulPartitionedCall/JobCategoryClassifier_1/noisy_dense_1_1/l2_normalize/Maximum/y", "op": "Const", "attr": { "value": { "tensor": { "dtype": "DT_FLOAT", "tensorShape": {} } }, "dtype": { "type": "DT_FLOAT" } } },
+      {
+        "name": "StatefulPartitionedCall/JobCategoryClassifier_1/shortcut_1/Cast/ReadVariableOp",
+        "op": "Const",
+        "attr": { "value": { "tensor": { "dtype": "DT_FLOAT", "tensorShape": { "dim": [{ "size": "256" }, { "size": "128" }] } } }, "dtype": { "type": "DT_FLOAT" } }
+      },
+      {
+        "name": "StatefulPartitionedCall/JobCategoryClassifier_1/shortcut_1/BiasAdd/ReadVariableOp",
+        "op": "Const",
+        "attr": { "value": { "tensor": { "dtype": "DT_FLOAT", "tensorShape": { "dim": [{ "size": "128" }] } } }, "dtype": { "type": "DT_FLOAT" } }
+      },
+      {
+        "name": "StatefulPartitionedCall/JobCategoryClassifier_1/layer_norm_1/moments/mean/reduction_indices",
+        "op": "Const",
+        "attr": { "value": { "tensor": { "dtype": "DT_INT32", "tensorShape": { "dim": [{ "size": "1" }] } } }, "dtype": { "type": "DT_INT32" } }
+      },
+      {
+        "name": "StatefulPartitionedCall/JobCategoryClassifier_1/layer_norm_1/moments/variance/reduction_indices",
+        "op": "Const",
+        "attr": { "value": { "tensor": { "dtype": "DT_INT32", "tensorShape": { "dim": [{ "size": "1" }] } } }, "dtype": { "type": "DT_INT32" } }
+      },
+      { "name": "StatefulPartitionedCall/JobCategoryClassifier_1/layer_norm_1/add/y", "op": "Const", "attr": { "value": { "tensor": { "dtype": "DT_FLOAT", "tensorShape": {} } }, "dtype": { "type": "DT_FLOAT" } } },
+      {
+        "name": "StatefulPartitionedCall/JobCategoryClassifier_1/layer_norm_1/Reshape",
+        "op": "Const",
+        "attr": { "value": { "tensor": { "dtype": "DT_FLOAT", "tensorShape": { "dim": [{ "size": "1" }, { "size": "128" }] } } }, "dtype": { "type": "DT_FLOAT" } }
+      },
+      {
+        "name": "StatefulPartitionedCall/JobCategoryClassifier_1/embed_dense_1/Cast/ReadVariableOp",
+        "op": "Const",
+        "attr": { "value": { "tensor": { "dtype": "DT_FLOAT", "tensorShape": { "dim": [{ "size": "128" }, { "size": "64" }] } } }, "dtype": { "type": "DT_FLOAT" } }
+      },
+      {
+        "name": "StatefulPartitionedCall/JobCategoryClassifier_1/embed_dense_1/BiasAdd/ReadVariableOp",
+        "op": "Const",
+        "attr": { "value": { "tensor": { "dtype": "DT_FLOAT", "tensorShape": { "dim": [{ "size": "64" }] } } }, "dtype": { "type": "DT_FLOAT" } }
+      },
+      {
+        "name": "StatefulPartitionedCall/JobCategoryClassifier_1/predictions_1/Cast/ReadVariableOp",
+        "op": "Const",
+        "attr": { "value": { "tensor": { "dtype": "DT_FLOAT", "tensorShape": { "dim": [{ "size": "64" }, { "size": "9" }] } } }, "dtype": { "type": "DT_FLOAT" } }
+      },
+      {
+        "name": "StatefulPartitionedCall/JobCategoryClassifier_1/predictions_1/BiasAdd/ReadVariableOp",
+        "op": "Const",
+        "attr": { "value": { "tensor": { "dtype": "DT_FLOAT", "tensorShape": { "dim": [{ "size": "9" }] } } }, "dtype": { "type": "DT_FLOAT" } }
+      },
+      { "name": "skill_features", "op": "Placeholder", "attr": { "shape": { "shape": { "dim": [{ "size": "-1" }, { "size": "1500" }] } }, "dtype": { "type": "DT_FLOAT" } } },
+      {
+        "name": "StatefulPartitionedCall/JobCategoryClassifier_1/proj_dense_1/Relu",
+        "op": "_FusedMatMul",
+        "input": ["skill_features", "StatefulPartitionedCall/JobCategoryClassifier_1/proj_dense_1/Cast/ReadVariableOp", "StatefulPartitionedCall/JobCategoryClassifier_1/proj_dense_1/BiasAdd/ReadVariableOp"],
+        "device": "/device:CPU:0",
+        "attr": {
+          "transpose_a": { "b": false },
+          "transpose_b": { "b": false },
+          "fused_ops": { "list": { "s": ["Qmlhc0FkZA==", "UmVsdQ=="] } },
+          "num_args": { "i": "1" },
+          "leakyrelu_alpha": { "f": 0.2 },
+          "epsilon": { "f": 0.0 },
+          "T": { "type": "DT_FLOAT" }
+        }
+      },
+      {
+        "name": "StatefulPartitionedCall/JobCategoryClassifier_1/proj_bn_1/batchnorm/mul_1",
+        "op": "Mul",
+        "input": ["StatefulPartitionedCall/JobCategoryClassifier_1/proj_dense_1/Relu", "StatefulPartitionedCall/JobCategoryClassifier_1/proj_bn_1/batchnorm/mul"],
+        "attr": { "T": { "type": "DT_FLOAT" } }
+      },
+      {
+        "name": "StatefulPartitionedCall/JobCategoryClassifier_1/proj_bn_1/batchnorm/add_1",
+        "op": "AddV2",
+        "input": ["StatefulPartitionedCall/JobCategoryClassifier_1/proj_bn_1/batchnorm/mul_1", "StatefulPartitionedCall/JobCategoryClassifier_1/proj_bn_1/batchnorm/sub"],
+        "attr": { "T": { "type": "DT_FLOAT" } }
+      },
+      {
+        "name": "StatefulPartitionedCall/JobCategoryClassifier_1/noisy_dense_1_1/dense_2_1/BiasAdd",
+        "op": "_FusedMatMul",
+        "input": [
+          "StatefulPartitionedCall/JobCategoryClassifier_1/proj_bn_1/batchnorm/add_1",
+          "StatefulPartitionedCall/JobCategoryClassifier_1/noisy_dense_1_1/dense_2_1/Cast/ReadVariableOp",
+          "StatefulPartitionedCall/JobCategoryClassifier_1/noisy_dense_1_1/dense_2_1/BiasAdd/ReadVariableOp"
+        ],
+        "device": "/device:CPU:0",
+        "attr": { "transpose_a": { "b": false }, "transpose_b": { "b": false }, "fused_ops": { "list": { "s": ["Qmlhc0FkZA=="] } }, "leakyrelu_alpha": { "f": 0.2 }, "num_args": { "i": "1" }, "epsilon": { "f": 0.0 }, "T": { "type": "DT_FLOAT" } }
+      },
+      {
+        "name": "StatefulPartitionedCall/JobCategoryClassifier_1/noisy_dense_1_1/batch_normalization_2_1/batchnorm/mul_1",
+        "op": "Mul",
+        "input": ["StatefulPartitionedCall/JobCategoryClassifier_1/noisy_dense_1_1/dense_2_1/BiasAdd", "StatefulPartitionedCall/JobCategoryClassifier_1/noisy_dense_1_1/batch_normalization_2_1/batchnorm/mul"],
+        "attr": { "T": { "type": "DT_FLOAT" } }
+      },
+      {
+        "name": "StatefulPartitionedCall/JobCategoryClassifier_1/noisy_dense_1_1/batch_normalization_2_1/batchnorm/add_1",
+        "op": "AddV2",
+        "input": ["StatefulPartitionedCall/JobCategoryClassifier_1/noisy_dense_1_1/batch_normalization_2_1/batchnorm/mul_1", "StatefulPartitionedCall/JobCategoryClassifier_1/noisy_dense_1_1/batch_normalization_2_1/batchnorm/sub"],
+        "attr": { "T": { "type": "DT_FLOAT" } }
+      },
+      {
+        "name": "StatefulPartitionedCall/JobCategoryClassifier_1/noisy_dense_1_1/activation_2_1/Relu",
+        "op": "Relu",
+        "input": ["StatefulPartitionedCall/JobCategoryClassifier_1/noisy_dense_1_1/batch_normalization_2_1/batchnorm/add_1"],
+        "attr": { "T": { "type": "DT_FLOAT" } }
+      },
+      {
+        "name": "StatefulPartitionedCall/JobCategoryClassifier_1/noisy_dense_1_1/l2_normalize/Square",
+        "op": "Square",
+        "input": ["StatefulPartitionedCall/JobCategoryClassifier_1/noisy_dense_1_1/activation_2_1/Relu"],
+        "attr": { "T": { "type": "DT_FLOAT" } }
+      },
+      {
+        "name": "StatefulPartitionedCall/JobCategoryClassifier_1/noisy_dense_1_1/l2_normalize/Sum",
+        "op": "Sum",
+        "input": ["StatefulPartitionedCall/JobCategoryClassifier_1/noisy_dense_1_1/l2_normalize/Square", "StatefulPartitionedCall/JobCategoryClassifier_1/noisy_dense_1_1/l2_normalize/Sum/reduction_indices"],
+        "attr": { "T": { "type": "DT_FLOAT" }, "Tidx": { "type": "DT_INT32" }, "keep_dims": { "b": true } }
+      },
+      {
+        "name": "StatefulPartitionedCall/JobCategoryClassifier_1/noisy_dense_1_1/l2_normalize/Maximum",
+        "op": "Maximum",
+        "input": ["StatefulPartitionedCall/JobCategoryClassifier_1/noisy_dense_1_1/l2_normalize/Sum", "StatefulPartitionedCall/JobCategoryClassifier_1/noisy_dense_1_1/l2_normalize/Maximum/y"],
+        "attr": { "T": { "type": "DT_FLOAT" } }
+      },
+      {
+        "name": "StatefulPartitionedCall/JobCategoryClassifier_1/noisy_dense_1_1/l2_normalize/Rsqrt",
+        "op": "Rsqrt",
+        "input": ["StatefulPartitionedCall/JobCategoryClassifier_1/noisy_dense_1_1/l2_normalize/Maximum"],
+        "attr": { "T": { "type": "DT_FLOAT" } }
+      },
+      {
+        "name": "StatefulPartitionedCall/JobCategoryClassifier_1/noisy_dense_1_1/l2_normalize",
+        "op": "Mul",
+        "input": ["StatefulPartitionedCall/JobCategoryClassifier_1/noisy_dense_1_1/activation_2_1/Relu", "StatefulPartitionedCall/JobCategoryClassifier_1/noisy_dense_1_1/l2_normalize/Rsqrt"],
+        "attr": { "T": { "type": "DT_FLOAT" } }
+      },
+      {
+        "name": "StatefulPartitionedCall/JobCategoryClassifier_1/noisy_dense_2_1/dense_3_1/BiasAdd",
+        "op": "_FusedMatMul",
+        "input": [
+          "StatefulPartitionedCall/JobCategoryClassifier_1/noisy_dense_1_1/l2_normalize",
+          "StatefulPartitionedCall/JobCategoryClassifier_1/noisy_dense_2_1/dense_3_1/Cast/ReadVariableOp",
+          "StatefulPartitionedCall/JobCategoryClassifier_1/noisy_dense_2_1/dense_3_1/BiasAdd/ReadVariableOp"
+        ],
+        "device": "/device:CPU:0",
+        "attr": { "transpose_a": { "b": false }, "transpose_b": { "b": false }, "fused_ops": { "list": { "s": ["Qmlhc0FkZA=="] } }, "num_args": { "i": "1" }, "leakyrelu_alpha": { "f": 0.2 }, "epsilon": { "f": 0.0 }, "T": { "type": "DT_FLOAT" } }
+      },
+      {
+        "name": "StatefulPartitionedCall/JobCategoryClassifier_1/shortcut_1/Relu",
+        "op": "_FusedMatMul",
+        "input": [
+          "StatefulPartitionedCall/JobCategoryClassifier_1/noisy_dense_1_1/l2_normalize",
+          "StatefulPartitionedCall/JobCategoryClassifier_1/shortcut_1/Cast/ReadVariableOp",
+          "StatefulPartitionedCall/JobCategoryClassifier_1/shortcut_1/BiasAdd/ReadVariableOp"
+        ],
+        "device": "/device:CPU:0",
+        "attr": {
+          "transpose_a": { "b": false },
+          "transpose_b": { "b": false },
+          "fused_ops": { "list": { "s": ["Qmlhc0FkZA==", "UmVsdQ=="] } },
+          "num_args": { "i": "1" },
+          "leakyrelu_alpha": { "f": 0.2 },
+          "epsilon": { "f": 0.0 },
+          "T": { "type": "DT_FLOAT" }
+        }
+      },
+      {
+        "name": "StatefulPartitionedCall/JobCategoryClassifier_1/noisy_dense_2_1/batch_normalization_3_1/batchnorm/mul_1",
+        "op": "Mul",
+        "input": ["StatefulPartitionedCall/JobCategoryClassifier_1/noisy_dense_2_1/dense_3_1/BiasAdd", "StatefulPartitionedCall/JobCategoryClassifier_1/noisy_dense_2_1/batch_normalization_3_1/batchnorm/mul"],
+        "attr": { "T": { "type": "DT_FLOAT" } }
+      },
+      {
+        "name": "StatefulPartitionedCall/JobCategoryClassifier_1/noisy_dense_2_1/batch_normalization_3_1/batchnorm/add_1",
+        "op": "AddV2",
+        "input": ["StatefulPartitionedCall/JobCategoryClassifier_1/noisy_dense_2_1/batch_normalization_3_1/batchnorm/mul_1", "StatefulPartitionedCall/JobCategoryClassifier_1/noisy_dense_2_1/batch_normalization_3_1/batchnorm/sub"],
+        "attr": { "T": { "type": "DT_FLOAT" } }
+      },
+      {
+        "name": "StatefulPartitionedCall/JobCategoryClassifier_1/noisy_dense_2_1/activation_3_1/Relu",
+        "op": "Relu",
+        "input": ["StatefulPartitionedCall/JobCategoryClassifier_1/noisy_dense_2_1/batch_normalization_3_1/batchnorm/add_1"],
+        "attr": { "T": { "type": "DT_FLOAT" } }
+      },
+      {
+        "name": "StatefulPartitionedCall/JobCategoryClassifier_1/noisy_dense_2_1/l2_normalize/Square",
+        "op": "Square",
+        "input": ["StatefulPartitionedCall/JobCategoryClassifier_1/noisy_dense_2_1/activation_3_1/Relu"],
+        "attr": { "T": { "type": "DT_FLOAT" } }
+      },
+      {
+        "name": "StatefulPartitionedCall/JobCategoryClassifier_1/noisy_dense_2_1/l2_normalize/Sum",
+        "op": "Sum",
+        "input": ["StatefulPartitionedCall/JobCategoryClassifier_1/noisy_dense_2_1/l2_normalize/Square", "StatefulPartitionedCall/JobCategoryClassifier_1/noisy_dense_2_1/l2_normalize/Sum/reduction_indices"],
+        "attr": { "T": { "type": "DT_FLOAT" }, "Tidx": { "type": "DT_INT32" }, "keep_dims": { "b": true } }
+      },
+      {
+        "name": "StatefulPartitionedCall/JobCategoryClassifier_1/noisy_dense_2_1/l2_normalize/Maximum",
+        "op": "Maximum",
+        "input": ["StatefulPartitionedCall/JobCategoryClassifier_1/noisy_dense_2_1/l2_normalize/Sum", "StatefulPartitionedCall/JobCategoryClassifier_1/noisy_dense_2_1/l2_normalize/Maximum/y"],
+        "attr": { "T": { "type": "DT_FLOAT" } }
+      },
+      {
+        "name": "StatefulPartitionedCall/JobCategoryClassifier_1/noisy_dense_2_1/l2_normalize/Rsqrt",
+        "op": "Rsqrt",
+        "input": ["StatefulPartitionedCall/JobCategoryClassifier_1/noisy_dense_2_1/l2_normalize/Maximum"],
+        "attr": { "T": { "type": "DT_FLOAT" } }
+      },
+      {
+        "name": "StatefulPartitionedCall/JobCategoryClassifier_1/noisy_dense_2_1/l2_normalize",
+        "op": "Mul",
+        "input": ["StatefulPartitionedCall/JobCategoryClassifier_1/noisy_dense_2_1/activation_3_1/Relu", "StatefulPartitionedCall/JobCategoryClassifier_1/noisy_dense_2_1/l2_normalize/Rsqrt"],
+        "attr": { "T": { "type": "DT_FLOAT" } }
+      },
+      {
+        "name": "StatefulPartitionedCall/JobCategoryClassifier_1/residual_add_1/Add",
+        "op": "AddV2",
+        "input": ["StatefulPartitionedCall/JobCategoryClassifier_1/noisy_dense_2_1/l2_normalize", "StatefulPartitionedCall/JobCategoryClassifier_1/shortcut_1/Relu"],
+        "attr": { "T": { "type": "DT_FLOAT" } }
+      },
+      {
+        "name": "StatefulPartitionedCall/JobCategoryClassifier_1/layer_norm_1/moments/mean",
+        "op": "Mean",
+        "input": ["StatefulPartitionedCall/JobCategoryClassifier_1/residual_add_1/Add", "StatefulPartitionedCall/JobCategoryClassifier_1/layer_norm_1/moments/mean/reduction_indices"],
+        "attr": { "T": { "type": "DT_FLOAT" }, "Tidx": { "type": "DT_INT32" }, "keep_dims": { "b": true } }
+      },
+      { "name": "StatefulPartitionedCall/JobCategoryClassifier_1/layer_norm_1/Neg", "op": "Neg", "input": ["StatefulPartitionedCall/JobCategoryClassifier_1/layer_norm_1/moments/mean"], "attr": { "T": { "type": "DT_FLOAT" } } },
+      {
+        "name": "StatefulPartitionedCall/JobCategoryClassifier_1/layer_norm_1/moments/SquaredDifference",
+        "op": "SquaredDifference",
+        "input": ["StatefulPartitionedCall/JobCategoryClassifier_1/residual_add_1/Add", "StatefulPartitionedCall/JobCategoryClassifier_1/layer_norm_1/moments/mean"],
+        "attr": { "T": { "type": "DT_FLOAT" } }
+      },
+      {
+        "name": "StatefulPartitionedCall/JobCategoryClassifier_1/layer_norm_1/moments/variance",
+        "op": "Mean",
+        "input": ["StatefulPartitionedCall/JobCategoryClassifier_1/layer_norm_1/moments/SquaredDifference", "StatefulPartitionedCall/JobCategoryClassifier_1/layer_norm_1/moments/variance/reduction_indices"],
+        "attr": { "Tidx": { "type": "DT_INT32" }, "T": { "type": "DT_FLOAT" }, "keep_dims": { "b": true } }
+      },
+      {
+        "name": "StatefulPartitionedCall/JobCategoryClassifier_1/layer_norm_1/add",
+        "op": "AddV2",
+        "input": ["StatefulPartitionedCall/JobCategoryClassifier_1/layer_norm_1/moments/variance", "StatefulPartitionedCall/JobCategoryClassifier_1/layer_norm_1/add/y"],
+        "attr": { "T": { "type": "DT_FLOAT" } }
+      },
+      { "name": "StatefulPartitionedCall/JobCategoryClassifier_1/layer_norm_1/Rsqrt", "op": "Rsqrt", "input": ["StatefulPartitionedCall/JobCategoryClassifier_1/layer_norm_1/add"], "attr": { "T": { "type": "DT_FLOAT" } } },
+      {
+        "name": "StatefulPartitionedCall/JobCategoryClassifier_1/layer_norm_1/mul",
+        "op": "Mul",
+        "input": ["StatefulPartitionedCall/JobCategoryClassifier_1/layer_norm_1/Rsqrt", "StatefulPartitionedCall/JobCategoryClassifier_1/layer_norm_1/Reshape"],
+        "attr": { "T": { "type": "DT_FLOAT" } }
+      },
+      {
+        "name": "StatefulPartitionedCall/JobCategoryClassifier_1/layer_norm_1/mul_1",
+        "op": "Mul",
+        "input": ["StatefulPartitionedCall/JobCategoryClassifier_1/layer_norm_1/Neg", "StatefulPartitionedCall/JobCategoryClassifier_1/layer_norm_1/mul"],
+        "attr": { "T": { "type": "DT_FLOAT" } }
+      },
+      {
+        "name": "StatefulPartitionedCall/JobCategoryClassifier_1/layer_norm_1/mul_2",
+        "op": "Mul",
+        "input": ["StatefulPartitionedCall/JobCategoryClassifier_1/residual_add_1/Add", "StatefulPartitionedCall/JobCategoryClassifier_1/layer_norm_1/mul"],
+        "attr": { "T": { "type": "DT_FLOAT" } }
+      },
+      {
+        "name": "StatefulPartitionedCall/JobCategoryClassifier_1/layer_norm_1/ArithmeticOptimizer/AddOpsRewrite_Leaf_1_add_2",
+        "op": "AddN",
+        "input": ["StatefulPartitionedCall/JobCategoryClassifier_1/layer_norm_1/mul_2", "StatefulPartitionedCall/JobCategoryClassifier_1/layer_norm_1/mul_1"],
+        "attr": { "N": { "i": "2" }, "T": { "type": "DT_FLOAT" }, "_grappler_ArithmeticOptimizer_AddOpsRewriteStage": { "b": true } }
+      },
+      {
+        "name": "StatefulPartitionedCall/JobCategoryClassifier_1/layer_norm_1/ArithmeticOptimizer/AddOpsRewrite_add_2",
+        "op": "AddV2",
+        "input": ["StatefulPartitionedCall/JobCategoryClassifier_1/layer_norm_1/Reshape_1", "StatefulPartitionedCall/JobCategoryClassifier_1/layer_norm_1/ArithmeticOptimizer/AddOpsRewrite_Leaf_1_add_2"],
+        "attr": { "T": { "type": "DT_FLOAT" }, "_grappler_ArithmeticOptimizer_AddOpsRewriteStage": { "b": true } }
+      },
+      {
+        "name": "StatefulPartitionedCall/JobCategoryClassifier_1/embed_dense_1/Relu",
+        "op": "_FusedMatMul",
+        "input": [
+          "StatefulPartitionedCall/JobCategoryClassifier_1/layer_norm_1/ArithmeticOptimizer/AddOpsRewrite_add_2",
+          "StatefulPartitionedCall/JobCategoryClassifier_1/embed_dense_1/Cast/ReadVariableOp",
+          "StatefulPartitionedCall/JobCategoryClassifier_1/embed_dense_1/BiasAdd/ReadVariableOp"
+        ],
+        "device": "/device:CPU:0",
+        "attr": {
+          "transpose_a": { "b": false },
+          "transpose_b": { "b": false },
+          "fused_ops": { "list": { "s": ["Qmlhc0FkZA==", "UmVsdQ=="] } },
+          "num_args": { "i": "1" },
+          "leakyrelu_alpha": { "f": 0.2 },
+          "epsilon": { "f": 0.0 },
+          "T": { "type": "DT_FLOAT" }
+        }
+      },
+      {
+        "name": "StatefulPartitionedCall/JobCategoryClassifier_1/predictions_1/BiasAdd",
+        "op": "_FusedMatMul",
+        "input": [
+          "StatefulPartitionedCall/JobCategoryClassifier_1/embed_dense_1/Relu",
+          "StatefulPartitionedCall/JobCategoryClassifier_1/predictions_1/Cast/ReadVariableOp",
+          "StatefulPartitionedCall/JobCategoryClassifier_1/predictions_1/BiasAdd/ReadVariableOp"
+        ],
+        "device": "/device:CPU:0",
+        "attr": { "transpose_a": { "b": false }, "transpose_b": { "b": false }, "fused_ops": { "list": { "s": ["Qmlhc0FkZA=="] } }, "leakyrelu_alpha": { "f": 0.2 }, "num_args": { "i": "1" }, "epsilon": { "f": 0.0 }, "T": { "type": "DT_FLOAT" } }
+      },
+      { "name": "StatefulPartitionedCall/JobCategoryClassifier_1/predictions_1/Softmax", "op": "Softmax", "input": ["StatefulPartitionedCall/JobCategoryClassifier_1/predictions_1/BiasAdd"], "attr": { "T": { "type": "DT_FLOAT" } } },
+      { "name": "Identity", "op": "Identity", "input": ["StatefulPartitionedCall/JobCategoryClassifier_1/predictions_1/Softmax"], "attr": { "T": { "type": "DT_FLOAT" } } }
+    ],
+    "library": {},
+    "versions": { "producer": 2129 }
+  },
+  "weightsManifest": [
+    {
+      "paths": ["group1-shard1of1.bin"],
+      "weights": [
+        { "name": "StatefulPartitionedCall/JobCategoryClassifier_1/layer_norm_1/Reshape_1", "shape": [1, 128], "dtype": "float32" },
+        { "name": "StatefulPartitionedCall/JobCategoryClassifier_1/noisy_dense_2_1/dense_3_1/Cast/ReadVariableOp", "shape": [256, 128], "dtype": "float32" },
+        { "name": "StatefulPartitionedCall/JobCategoryClassifier_1/noisy_dense_2_1/dense_3_1/BiasAdd/ReadVariableOp", "shape": [128], "dtype": "float32" },
+        { "name": "StatefulPartitionedCall/JobCategoryClassifier_1/noisy_dense_2_1/batch_normalization_3_1/batchnorm/mul", "shape": [128], "dtype": "float32" },
+        { "name": "StatefulPartitionedCall/JobCategoryClassifier_1/noisy_dense_2_1/batch_normalization_3_1/batchnorm/sub", "shape": [128], "dtype": "float32" },
+        { "name": "StatefulPartitionedCall/JobCategoryClassifier_1/noisy_dense_2_1/l2_normalize/Sum/reduction_indices", "shape": [], "dtype": "int32" },
+        { "name": "StatefulPartitionedCall/JobCategoryClassifier_1/noisy_dense_2_1/l2_normalize/Maximum/y", "shape": [], "dtype": "float32" },
+        { "name": "StatefulPartitionedCall/JobCategoryClassifier_1/proj_dense_1/Cast/ReadVariableOp", "shape": [1500, 512], "dtype": "float32" },
+        { "name": "StatefulPartitionedCall/JobCategoryClassifier_1/proj_dense_1/BiasAdd/ReadVariableOp", "shape": [512], "dtype": "float32" },
+        { "name": "StatefulPartitionedCall/JobCategoryClassifier_1/proj_bn_1/batchnorm/mul", "shape": [512], "dtype": "float32" },
+        { "name": "StatefulPartitionedCall/JobCategoryClassifier_1/proj_bn_1/batchnorm/sub", "shape": [512], "dtype": "float32" },
+        { "name": "StatefulPartitionedCall/JobCategoryClassifier_1/noisy_dense_1_1/dense_2_1/Cast/ReadVariableOp", "shape": [512, 256], "dtype": "float32" },
+        { "name": "StatefulPartitionedCall/JobCategoryClassifier_1/noisy_dense_1_1/dense_2_1/BiasAdd/ReadVariableOp", "shape": [256], "dtype": "float32" },
+        { "name": "StatefulPartitionedCall/JobCategoryClassifier_1/noisy_dense_1_1/batch_normalization_2_1/batchnorm/mul", "shape": [256], "dtype": "float32" },
+        { "name": "StatefulPartitionedCall/JobCategoryClassifier_1/noisy_dense_1_1/batch_normalization_2_1/batchnorm/sub", "shape": [256], "dtype": "float32" },
+        { "name": "StatefulPartitionedCall/JobCategoryClassifier_1/noisy_dense_1_1/l2_normalize/Sum/reduction_indices", "shape": [], "dtype": "int32" },
+        { "name": "StatefulPartitionedCall/JobCategoryClassifier_1/noisy_dense_1_1/l2_normalize/Maximum/y", "shape": [], "dtype": "float32" },
+        { "name": "StatefulPartitionedCall/JobCategoryClassifier_1/shortcut_1/Cast/ReadVariableOp", "shape": [256, 128], "dtype": "float32" },
+        { "name": "StatefulPartitionedCall/JobCategoryClassifier_1/shortcut_1/BiasAdd/ReadVariableOp", "shape": [128], "dtype": "float32" },
+        { "name": "StatefulPartitionedCall/JobCategoryClassifier_1/layer_norm_1/moments/mean/reduction_indices", "shape": [1], "dtype": "int32" },
+        { "name": "StatefulPartitionedCall/JobCategoryClassifier_1/layer_norm_1/moments/variance/reduction_indices", "shape": [1], "dtype": "int32" },
+        { "name": "StatefulPartitionedCall/JobCategoryClassifier_1/layer_norm_1/add/y", "shape": [], "dtype": "float32" },
+        { "name": "StatefulPartitionedCall/JobCategoryClassifier_1/layer_norm_1/Reshape", "shape": [1, 128], "dtype": "float32" },
+        { "name": "StatefulPartitionedCall/JobCategoryClassifier_1/embed_dense_1/Cast/ReadVariableOp", "shape": [128, 64], "dtype": "float32" },
+        { "name": "StatefulPartitionedCall/JobCategoryClassifier_1/embed_dense_1/BiasAdd/ReadVariableOp", "shape": [64], "dtype": "float32" },
+        { "name": "StatefulPartitionedCall/JobCategoryClassifier_1/predictions_1/Cast/ReadVariableOp", "shape": [64, 9], "dtype": "float32" },
+        { "name": "StatefulPartitionedCall/JobCategoryClassifier_1/predictions_1/BiasAdd/ReadVariableOp", "shape": [9], "dtype": "float32" }
+      ]
+    }
+  ]
+}

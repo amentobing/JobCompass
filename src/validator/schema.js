@@ -26,6 +26,10 @@ export const loginSchema = Joi.object({
     .email({
       minDomainSegments: 2,
     })
-    .message('format email tidak valid!'),
+    .required()
+    .messages({
+      'string.email': 'format email tidak valid!',
+      'any.required': 'email harus diisi!',
+    }),
   password: Joi.string().pattern(new RegExp('^(?=.*[._%#!-])[a-zA-Z0-9._%#!-]{6,}$')).message('format password harus berupa (a-z, A-Z, 0-9, dan spesial karakter (._%#!-))').required(),
 });

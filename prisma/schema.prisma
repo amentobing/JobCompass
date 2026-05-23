@@ -4,12 +4,13 @@
 // Get a free hosted Postgres database in seconds: `npx create-db`
 
 generator client {
-  provider = "prisma-client"
-  output   = "./generated/prisma"
+  provider = "prisma-client-js"
+  previewFeatures = ["driverAdapters"]
 }
 
 datasource db {
   provider = "postgresql"
+ 
 }
 
 model User {
@@ -21,6 +22,7 @@ model User {
   update_at DateTime  @updatedAt
 
   resumes   Resume[]
+  refreshTokens RefreshToken[]
 }
 
 model Resume{
@@ -53,4 +55,13 @@ model MatchHitory{
 
   resume        Resume    @relation(fields: [resumeId], references: [id], onDelete: Cascade)
   job           Job       @relation(fields: [jobId], references: [id], onDelete: Cascade)
+}
+
+model RefreshToken {
+  id        String    @id @default(uuid())
+  userId    String
+  token     String    @unique
+  created_at DateTime  @default(now())
+
+  user      User      @relation(fields: [userId], references: [id], onDelete: Cascade)
 }

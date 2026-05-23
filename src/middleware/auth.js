@@ -2,18 +2,19 @@ import token_manager from '../security/token-manager.js';
 import response from '../utils/response.js';
 
 async function authenticationToken(req, res, next) {
-  const token = req.headers.authorization;
+  const accessToken = req.headers.authorization;
 
-  if (token && token.indexOf('Bearer ') !== -1) {
+  if (accessToken && accessToken.indexOf('Bearer ') !== -1) {
+    const token = accessToken.split('Bearer ')[1];
     try {
-      const user = await token_manager.verifyAccessToken(token.split('Bearer ')[1]);
+      const user = await token_manager.verifyAccessToken(token, process.env.ACCESS_TOKEN_SECRET);
       req.user = user;
       return next();
     } catch (err) {
-      response(res, err.statusCode || 401, err.message || 'Token tidak valid', null);
+      response(res, err.statusCode || 401, err.message || 'Tidak dapat memverifikasi token', null);
     }
   } else {
-    response(res, 401, 'Token tidak valid', null);
+    response(res, 401, 'Tidak dapat memverifikasi token', null);
   }
 }
 
