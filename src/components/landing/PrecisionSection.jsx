@@ -1,117 +1,80 @@
 export default function PrecisionSection() {
     return (
-        <section className="bg-white py-24 px-6">
-
+        <section className="py-24 px-6 bg-white border-t border-slate-200">
             <div className="max-w-7xl mx-auto grid grid-cols-1 lg:grid-cols-2 gap-16 items-center">
-
-                {/* Left Content */}
+                
+                {/* Kiri: Teks Penjelasan */}
                 <div>
-
-                    <h2 className="text-4xl font-bold leading-tight text-gray-900">
-                        Beyond Keywords.
-                        <br />
-                        <span className="text-blue-700">
-                            Semantic Precision.
+                    <h2 className="text-4xl font-extrabold text-slate-900 leading-tight">
+                        Lebih dari Kata Kunci. <br />
+                        <span className="text-blue-600">
+                            Presisi Semantik.
                         </span>
                     </h2>
-
-                    <p className="mt-6 text-gray-600 leading-relaxed">
-                        Traditional platforms rely on rigid boolean searches. SkillFit
-                        employs deep contextual analysis to understand the weight of your
-                        experiences.
+                    <p className="mt-6 text-slate-600 leading-relaxed text-lg mb-8">
+                        Platform tradisional mengandalkan pencarian boolean yang kaku. JobCompass menerapkan analisis kontekstual mendalam untuk memahami bobot dari setiap pengalaman Anda.
                     </p>
-
-                    {/* Features */}
-                    <div className="mt-8 space-y-6">
-
-                        <div>
-                            <h4 className="font-semibold text-gray-900">
-                                Skill Topology Mapping
-                            </h4>
-
-                            <p className="text-gray-600 text-sm mt-1">
-                                Visualizing depth and breadth of your expertise.
-                            </p>
+                    
+                    <div className="space-y-8">
+                        <div className="flex gap-4">
+                            <div className="w-1.5 h-auto bg-blue-600 rounded-full"></div>
+                            <div>
+                                <h4 className="font-bold text-slate-900 text-lg">Topologi Keahlian</h4>
+                                <p className="text-slate-500 mt-1">Sistem memetakan keluasan dan kedalaman tumpukan teknologi Anda.</p>
+                            </div>
                         </div>
-
-                        <div>
-                            <h4 className="font-semibold text-gray-900">
-                                Cultural Resonance
-                            </h4>
-
-                            <p className="text-gray-600 text-sm mt-1">
-                                Evaluating work style preferences against company ethos.
-                            </p>
+                        <div className="flex gap-4">
+                            <div className="w-1.5 h-auto bg-slate-300 rounded-full"></div>
+                            <div>
+                                <h4 className="font-bold text-slate-900 text-lg">Resonansi Pengalaman</h4>
+                                <p className="text-slate-500 mt-1">Mengevaluasi rekam jejak Anda terhadap kebutuhan spesifik industri.</p>
+                            </div>
                         </div>
-
                     </div>
                 </div>
 
-                {/* Right Card */}
-                <div className="bg-[#f8f8f8] rounded-3xl p-8 shadow-md">
-
-                    <div className="flex items-center justify-between">
+                {/* Kanan: Dashboard Card UI */}
+                <div className="bg-[#F8FAFC] border border-slate-200 rounded-3xl p-8 md:p-10 shadow-sm">
+                    <div className="flex justify-between items-start mb-8">
                         <div>
-                            <p className="text-sm text-gray-500">TOP MATCH</p>
-
-                            <h3 className="text-2xl font-bold mt-2">
-                                Senior UX Architect
-                            </h3>
-
-                            <p className="text-gray-600 mt-1">
-                                Fintech Innovation Ltd.
-                            </p>
+                            <p className="text-xs font-bold text-slate-400 tracking-wider mb-2">TOP MATCH</p>
+                            <h3 className="text-2xl font-black text-slate-900">Senior UX Architect</h3>
+                            <p className="text-slate-500 font-medium mt-1">Fintech Innovations Ltd.</p>
                         </div>
-
-                        <div className="text-blue-700 font-bold text-xl">
+                        <div className="bg-white border border-slate-200 text-blue-700 font-black text-2xl px-4 py-2 rounded-xl shadow-sm">
                             94%
                         </div>
                     </div>
 
-                    {/* Progress */}
-                    <div className="mt-8 space-y-6">
-
+                    <div className="space-y-6">
                         <div>
-                            <div className="flex justify-between text-sm mb-2">
-                                <span>Technical Alignment</span>
-                                <span>High</span>
+                            <div className="flex justify-between text-sm mb-2 font-bold text-slate-700">
+                                <span>Penyesuaian Teknis</span>
+                                <span className="text-slate-900">Tinggi</span>
                             </div>
-
-                            <div className="w-full bg-gray-200 rounded-full h-2">
-                                <div className="bg-blue-700 h-2 rounded-full w-[90%]"></div>
+                            <div className="w-full bg-slate-200 rounded-full h-2">
+                                <div className="bg-blue-600 h-2 rounded-full w-[90%]"></div>
                             </div>
                         </div>
 
                         <div>
-                            <div className="flex justify-between text-sm mb-2">
-                                <span>Domain Experience</span>
-                                <span>Exceptional</span>
+                            <div className="flex justify-between text-sm mb-2 font-bold text-slate-700">
+                                <span>Domain Industri</span>
+                                <span className="text-slate-900">Sangat Relevan</span>
                             </div>
-
-                            <div className="w-full bg-gray-200 rounded-full h-2">
-                                <div className="bg-blue-700 h-2 rounded-full w-[95%]"></div>
+                            <div className="w-full bg-slate-200 rounded-full h-2">
+                                <div className="bg-slate-700 h-2 rounded-full w-[85%]"></div>
                             </div>
                         </div>
-
                     </div>
 
-                    {/* Tags */}
-                    <div className="mt-8 flex flex-wrap gap-3">
-
-                        <span className="bg-blue-100 text-blue-700 px-4 py-2 rounded-full text-sm">
-                            Interaction Design
-                        </span>
-
-                        <span className="bg-blue-100 text-blue-700 px-4 py-2 rounded-full text-sm">
-                            Design Systems
-                        </span>
-
-                        <span className="bg-blue-100 text-blue-700 px-4 py-2 rounded-full text-sm">
-                            +12 Core Skills
-                        </span>
-
+                    <div className="mt-8 pt-8 border-t border-slate-200 flex flex-wrap gap-2">
+                        <span className="bg-white border border-slate-200 text-slate-600 px-3 py-1.5 rounded-lg text-sm font-bold shadow-sm">Interaction Design</span>
+                        <span className="bg-white border border-slate-200 text-slate-600 px-3 py-1.5 rounded-lg text-sm font-bold shadow-sm">Design Systems</span>
+                        <span className="bg-blue-50 text-blue-700 px-3 py-1.5 rounded-lg text-sm font-bold">+12 Skills</span>
                     </div>
                 </div>
+
             </div>
         </section>
     );

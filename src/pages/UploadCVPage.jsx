@@ -1,100 +1,73 @@
-import Sidebar from "../components/upload/Sidebar";
-import Topbar from "../components/upload/Topbar";
-import UploadBox from "../components/upload/UploadBox";
-import TextInputSection from "../components/upload/TextInputSection";
-import UploadedFileCard from "../components/upload/UploadedFileCard";
-import AnalysisCard from "../components/upload/AnalysisCard";
 import { useState } from "react";
+import { useNavigate } from "react-router-dom"; // Tambahkan ini
+import axios from "axios"; // Tambahkan ini
+import Navbar from "../components/landing/Navbar";
+import UploadBox from "../components/upload/UploadBox";
+import Footer from "../components/landing/Footer";
 
 export default function UploadCVPage() {
-    const [selectedFile, setSelectedFile] = useState(null);
+    const [file, setFile] = useState(null);
+    const [isAnalyzing, setIsAnalyzing] = useState(false);
+    
+    // Inisialisasi navigasi dari react-router-dom
+    const navigate = useNavigate(); 
+
+    const handleFileSelect = (selectedFile) => {
+        setFile(selectedFile);
+    };
+
+    // Ini adalah logika Axios milikmu yang sudah dipindahkan
+    const handleAnalyze = async () => {
+        if (!file) {
+            alert("Please upload a CV first");
+            return;
+        }
+
+        setIsAnalyzing(true);
+        
+        try {
+            const formData = new FormData();
+            formData.append("cv", file); // Pastikan backend python menerima key "cv" ini
+
+            const response = await axios.post(
+                "http://localhost:5000/upload",
+                formData,
+                {
+                    headers: {
+                        "Content-Type": "multipart/form-data",
+                    },
+                }
+            );
+
+            console.log("Backend Response:", response.data);
+            alert("CV berhasil dianalisis!");
+            
+            // Langsung arahkan ke dashboard jika sukses
+            navigate("/dashboard");
+
+        } catch (error) {
+            console.error(error);
+            alert("Gagal connect ke backend API. Pastikan server lokal berjalan.");
+        } finally {
+            setIsAnalyzing(false);
+        }
+    };
+
     return (
-        <div className="min-h-screen bg-[#f5f7fb] flex flex-col lg:flex-row">
+        <div className="min-h-screen flex flex-col bg-indigo-50/30 text-slate-800 font-sans selection:bg-cyan-200 selection:text-cyan-900">
+            <Navbar />
+            
+            <main className="flex-grow flex flex-col items-center justify-center p-6 py-12 md:py-20 w-full">
+                {/* Komponen UploadBox dipanggil dengan Props */}
+                <UploadBox 
+                    onFileSelect={handleFileSelect}
+                    onAnalyze={handleAnalyze}
+                    selectedFile={file}
+                    isAnalyzing={isAnalyzing}
+                />
+            </main>
 
-            {/* Sidebar */}
-            <Sidebar />
-
-            {/* Main Content */}
-            <div className="w-full lg:ml-[260px] flex-1 p-4 md:p-8 h-screen overflow-y-auto">
-
-                {/* <Topbar /> */}
-
-                {/* Header */}
-                <div className="mt-8">
-
-                    <h1 className="text-4xl font-bold text-gray-900">
-                        Upload Candidate Profiles
-                    </h1>
-
-                    <p className="text-gray-600 mt-2">
-                        Initiate the precision matching process.
-                    </p>
-                </div>
-
-                {/* Steps */}
-                <div className="flex items-center gap-4 mt-8 text-sm">
-
-                    <div className="flex items-center gap-2">
-                        <div className="w-7 h-7 rounded-full bg-blue-700 text-white flex items-center justify-center">
-                            1
-                        </div>
-
-                        <span className="text-blue-700 font-medium">
-                            Upload CV
-                        </span>
-                    </div>
-
-                    <div className="w-10 h-[1px] bg-gray-300"></div>
-
-                    <div className="flex items-center gap-2 opacity-50">
-                        <div className="w-7 h-7 rounded-full bg-gray-300 text-white flex items-center justify-center">
-                            2
-                        </div>
-
-                        <span>AI Analysis</span>
-                    </div>
-
-                    <div className="w-10 h-[1px] bg-gray-300"></div>
-
-                    <div className="flex items-center gap-2 opacity-50">
-                        <div className="w-7 h-7 rounded-full bg-gray-300 text-white flex items-center justify-center">
-                            3
-                        </div>
-
-                        <span>Match Results</span>
-                    </div>
-                </div>
-
-                {/* Upload Box */}
-                <div className="mt-10">
-                    <UploadBox onFileSelect={setSelectedFile} />
-                </div>
-
-                {/* Divider */}
-                <div className="flex items-center gap-4 my-10">
-
-                    <div className="flex-1 h-[1px] bg-gray-300"></div>
-
-                    <span className="text-gray-500 text-sm">
-                        OR
-                    </span>
-
-                    <div className="flex-1 h-[1px] bg-gray-300"></div>
-                </div>
-
-                {/* Text Input */}
-                <TextInputSection />
-                <div className="grid grid-cols-1 lg:grid-cols-3 gap-8 mt-10">
-
-                    {/* Left */}
-                    <div className="lg:col-span-2">
-                        <UploadedFileCard file={selectedFile} />
-                    </div>
-
-                    {/* Right */}
-                    <AnalysisCard file={selectedFile} />
-                </div>
-            </div>
+            <Footer />
         </div>
     );
 }

@@ -1,40 +1,26 @@
 const stats = [
-    {
-        value: "94%",
-        label: "Matching Accuracy",
-    },
-    {
-        value: "<3s",
-        label: "Analysis Time",
-    },
-    {
-        value: "50k+",
-        label: "Curated Profiles",
-    },
-    {
-        value: "120+",
-        label: "Enterprise Partners",
-    },
+    { value: "94%", label: "Akurasi Pencocokan NLP" },
+    { value: "< 2s", label: "Kecepatan Pemrosesan File" },
+    { value: "150+", label: "Perusahaan Terintegrasi" },
+    { value: "850k", label: "Profil Teranalisis" },
 ];
 
 export default function StatsSection() {
     return (
-        <section className="bg-white py-10 px-6">
-            <div className="max-w-6xl mx-auto grid grid-cols-2 md:grid-cols-4 gap-8 text-center">
-
-                {stats.map((item, index) => (
-                    <div key={index}>
-
-                        <h2 className="text-3xl font-bold text-blue-700">
-                            {item.value}
-                        </h2>
-
-                        <p className="mt-2 text-gray-600 text-sm">
-                            {item.label}
-                        </p>
-
-                    </div>
-                ))}
+        <section className="bg-white border-y border-slate-200 py-12 px-6">
+            <div className="max-w-7xl mx-auto">
+                <div className="grid grid-cols-2 md:grid-cols-4 gap-8 md:gap-12 divide-x divide-slate-100">
+                    {stats.map((item, index) => (
+                        <div key={index} className="px-6 text-center md:text-left">
+                            <h2 className="text-4xl lg:text-5xl font-black text-slate-900">
+                                {item.value}
+                            </h2>
+                            <p className="mt-2 text-slate-500 text-sm font-semibold tracking-wide">
+                                {item.label}
+                            </p>
+                        </div>
+                    ))}
+                </div>
             </div>
         </section>
     );

@@ -1,72 +1,60 @@
+import { UploadCloud, BrainCircuit, Send } from "lucide-react";
+
 const methods = [
-    {
-        number: "1",
-        title: "Upload Context",
-        description:
-            "Submit your CV in any format. Our parser extracts not just keywords, but the narrative arc of your experience.",
+    { 
+        icon: <UploadCloud className="text-indigo-600" size={28} />,
+        title: "Unggah CV Anda", 
+        description: "Masukkan dokumen CV dalam format PDF. Sistem kami akan langsung mengekstrak seluruh pengalaman dan keahlian Anda secara otomatis." 
     },
-
-    {
-        number: "2",
-        title: "Curated Matching",
-        description:
-            "Our proprietary algorithm evaluates semantic intent, mapping your unique capabilities against verified role requirements.",
+    { 
+        icon: <BrainCircuit className="text-indigo-600" size={28} />,
+        title: "Analisis AI", 
+        description: "Lebih dari sekadar mencocokkan keyword. Algoritma kami mencocokkan makna dari pengalaman Anda dengan kebutuhan spesifik industri." 
     },
-
-    {
-        number: "3",
-        title: "Seamless Apply",
-        description:
-            "Receive your top matches with complete transparency. One-click application routes your profile directly to decision-makers.",
+    { 
+        icon: <Send className="text-indigo-600" size={28} />,
+        title: "Temukan Job Impian Anda", 
+        description: "Dapatkan daftar lowongan yang paling relevan dengan profil Anda, lengkap dengan persentase kecocokan yang akurat dan transparan." 
     },
 ];
 
 export default function MethodologySection() {
     return (
-        <section className="bg-[#f8f8f8] py-24 px-6">
-
+        <section className="py-24 px-6 bg-indigo-50"> 
             <div className="max-w-7xl mx-auto">
-
-                {/* Title */}
-                <div className="mb-16">
-                    <h2 className="text-4xl font-bold text-gray-900">
-                        The Methodology
+                
+                {/* --- HEADER TENGAH --- */}
+                <div className="text-center max-w-3xl mx-auto mb-16">
+                    <h2 className="text-4xl lg:text-5xl font-black text-slate-900 mb-6 leading-tight">
+                        Cara Kerja <span className="text-indigo-600">JobCompass.</span>
                     </h2>
-
-                    <p className="mt-4 text-gray-600 max-w-2xl leading-relaxed">
-                        A refined process designed for clarity and depth. We strip away the
-                        noise to focus on what truly matters: capability and cultural
-                        alignment.
+                    <p className="text-slate-600 text-lg leading-relaxed font-medium">
+                        Tiga langkah cepat menuju karir impian. Tanpa filter kaku, murni berbasis keahlian.
                     </p>
                 </div>
-
-                {/* Cards */}
+``
+                {/* --- KARTU HORIZONTAL --- */}
                 <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
-
                     {methods.map((item, index) => (
-                        <div
-                            key={index}
-                            className="bg-white rounded-2xl p-8 shadow-sm hover:shadow-lg transition duration-300"
-                        >
-
-                            {/* Number */}
-                            <div className="w-10 h-10 rounded-full bg-blue-700 text-white flex items-center justify-center font-semibold">
-                                {item.number}
+                        <div key={index} className="bg-white rounded-3xl p-8 md:p-10 shadow-sm border border-indigo-100 hover:shadow-xl hover:-translate-y-1 transition-all duration-300 flex flex-col items-center text-center">
+                            
+                            {/* Wadah Ikon (Sesuai Referensi Foto Kedua) */}
+                            <div className="w-16 h-16 bg-indigo-50 rounded-2xl flex items-center justify-center mb-6 border border-indigo-100 shadow-sm">
+                                {item.icon}
                             </div>
-
-                            {/* Title */}
-                            <h3 className="mt-6 text-xl font-semibold text-gray-900">
+                            
+                            <h3 className="text-xl font-black text-slate-900 mb-4">
                                 {item.title}
                             </h3>
-
-                            {/* Description */}
-                            <p className="mt-4 text-gray-600 leading-relaxed text-sm">
+                            
+                            <p className="text-slate-600 leading-relaxed font-medium text-sm">
                                 {item.description}
                             </p>
-
+                            
                         </div>
                     ))}
                 </div>
+                
             </div>
         </section>
     );
