@@ -1,6 +1,7 @@
 import { useState } from "react";
-import { useNavigate } from "react-router-dom"; // Tambahkan ini
-import axios from "axios"; // Tambahkan ini
+import { useNavigate } from "react-router-dom";
+import axios from "axios";
+import { motion } from "framer-motion";
 import Navbar from "../components/landing/Navbar";
 import UploadBox from "../components/upload/UploadBox";
 import Footer from "../components/landing/Footer";
@@ -8,65 +9,69 @@ import Footer from "../components/landing/Footer";
 export default function UploadCVPage() {
     const [file, setFile] = useState(null);
     const [isAnalyzing, setIsAnalyzing] = useState(false);
-    
-    // Inisialisasi navigasi dari react-router-dom
-    const navigate = useNavigate(); 
+    const navigate = useNavigate();
 
     const handleFileSelect = (selectedFile) => {
         setFile(selectedFile);
     };
 
-    // Ini adalah logika Axios milikmu yang sudah dipindahkan
     const handleAnalyze = async () => {
         if (!file) {
-            alert("Please upload a CV first");
+            alert("Silakan unggah CV terlebih dahulu");
             return;
         }
 
+        // PENGECEKAN TOKEN DIHAPUS AGAR BISA UPLOAD TANPA LOGIN
+
         setIsAnalyzing(true);
-        
+
         try {
             const formData = new FormData();
-            formData.append("cv", file); // Pastikan backend python menerima key "cv" ini
+            formData.append("file", file);
 
             const response = await axios.post(
-                "http://localhost:5000/upload",
+                "https://9dnnv6l4-3001.asse.devtunnels.ms/upload",
                 formData,
                 {
                     headers: {
                         "Content-Type": "multipart/form-data",
+                        // HEADER AUTHORIZATION DIHAPUS
                     },
                 }
             );
 
-            console.log("Backend Response:", response.data);
-            alert("CV berhasil dianalisis!");
-            
-            // Langsung arahkan ke dashboard jika sukses
-            navigate("/dashboard");
+            if (response.data.status === "success") {
+                // Simpan data AI ke Local Storage
+                localStorage.setItem("cvData", JSON.stringify(response.data.data));
+                localStorage.setItem("uploadedFileName", file.name);
+
+                alert("CV berhasil dianalisis!");
+                navigate("/dashboard");
+            } else {
+                alert(response.data.message || "Gagal memproses unggahan file.");
+            }
 
         } catch (error) {
             console.error(error);
-            alert("Gagal connect ke backend API. Pastikan server lokal berjalan.");
+            alert("Gagal terhubung ke backend API. Pastikan server lokal berjalan.");
         } finally {
             setIsAnalyzing(false);
         }
     };
 
     return (
-        <div className="min-h-screen flex flex-col bg-indigo-50/30 text-slate-800 font-sans selection:bg-cyan-200 selection:text-cyan-900">
+        <div className="min-h-screen flex flex-col bg-blue-50/30 text-slate-800 font-sans selection:bg-cyan-200 selection:text-cyan-900 overflow-x-hidden">
             <Navbar />
-            
-            <main className="flex-grow flex flex-col items-center justify-center p-6 py-12 md:py-20 w-full">
-                {/* Komponen UploadBox dipanggil dengan Props */}
-                <UploadBox 
-                    onFileSelect={handleFileSelect}
-                    onAnalyze={handleAnalyze}
-                    selectedFile={file}
-                    isAnalyzing={isAnalyzing}
-                />
+            <main className="flex-grow flex flex-col items-center justify-center p-6 pt-32 pb-12 md:pt-40 md:pb-20 w-full">
+                <motion.div initial={{ opacity: 0, y: 40 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.7, ease: [0.6, 0.05, -0.01, 0.9] }} className="w-full max-w-2xl">
+                    <UploadBox
+                        onFileSelect={handleFileSelect}
+                        onAnalyze={handleAnalyze}
+                        selectedFile={file}
+                        isAnalyzing={isAnalyzing}
+                    />
+                </motion.div>
             </main>
-
             <Footer />
         </div>
     );
