@@ -1,3 +1,7 @@
+import ClientError from '../exceptions/client-error.js';
+import { saveResume, saveJob } from '../utils/db.js';
+import { linkedinAPI } from '../utils/linkedin-api.js';
+
 import tf from '@tensorflow/tfjs-node';
 import fs from 'fs';
 import PDFParser from 'pdf2json';
@@ -59,20 +63,26 @@ function extractTextFromPDF(buffer) {
   });
 }
 
-export async function predictCV(cvBuffer) {
+export async function loadMLModel() {
   try {
-    const vectorizerConfigPath = path.resolve('src/model/vectorizer_config.json');
+    console.log('\nSedang memuat model Machine Learning...');
+    const vectorizerConfigPath = path.resolve('src/ml-model/vectorizer_config.json');
     const vectorizerConfig = JSON.parse(fs.readFileSync(vectorizerConfigPath, 'utf8'));
     vocab = vectorizerConfig.vocabulary;
     idfValues = vectorizerConfig.idf_values;
 
-    if (!model) {
-      const modelPath = path.resolve('src/model/model.json');
-      // const modelUrl = decodeURI(pathToFileURL(modelPath).href);
-      model = await tf.loadGraphModel(tf.io.fileSystem(modelPath));
-    }
+    const modelPath = path.resolve('src/ml-model/model.json');
+    model = await tf.loadGraphModel(tf.io.fileSystem(modelPath));
+    console.log('Model ML berhasil dimuat!');
   } catch (error) {
-    throw new Error('Error Load Model: ' + error.message);
+    console.error('Error saat memuat model:', error.message);
+    process.exit(1);
+  }
+}
+
+async function predictCV(cvBuffer) {
+  if (!model) {
+    throw new Error('Model belum siap digunakan');
   }
 
   // 1. Ekstrak Teks dari PDF
@@ -105,11 +115,65 @@ export async function predictCV(cvBuffer) {
 
   return {
     prediction: {
-      class_id: predictedClassId,
       category_name: LABEL_NAMES[predictedClassId],
-      confidence: probabilities[predictedClassId],
+      confidence: parseFloat(probabilities[predictedClassId]),
       all_probabilities: allProbObj,
     },
     parsedText: cvText,
   };
+}
+
+export default async function predictCVController(req, res, next) {
+  try {
+    if (!req.file || !req.file.buffer) {
+      throw new ClientError('Tidak dapat menemukan file PDF', 400);
+    }
+
+    const cv = req.file.buffer;
+    const { prediction, parsedText } = await predictCV(cv);
+    const jobs = await linkedinAPI(prediction.category_name);
+
+    // 1. Simpan Resume ke Database
+    const resumeResult = await saveResume({
+      userId: req.user.id,
+      filename: req.file.originalname,
+      parsedText,
+    });
+    if (resumeResult.status === 'fail') {
+      return res.status(400).json({
+        status: 'fail',
+        message: resumeResult.message,
+      });
+    }
+
+    const resumeId = resumeResult.data.id;
+    const savedJobs = [];
+    // 2. Simpan Hasil Lowongan Kerja (RapidAPI) yang berkaitan dengan resumeId ini
+    if (jobs && Array.isArray(jobs)) {
+      for (const job of jobs) {
+        const jobResult = await saveJob({
+          resumeId,
+          title: job.title,
+          description: job.description,
+          company: job.organization, // Pemetaan dari 'organization' ke kolom 'company'
+          url: job.link, // Pemetaan dari 'link' ke kolom 'url'
+        });
+        if (jobResult.status === 'success') {
+          savedJobs.push(jobResult.data);
+        }
+      }
+    }
+
+    res.json({
+      status: 'success',
+      message: 'File uploaded successfully',
+      data: {
+        prediction,
+        jobs,
+        // resume: resumeResult.data,
+      },
+    });
+  } catch (err) {
+    next(err);
+  }
 }

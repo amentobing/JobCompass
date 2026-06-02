@@ -1,7 +1,8 @@
 import express from 'express';
-import router from './routes.js';
-import errorHandler from './handlers/errorHandler.js';
+import router from './routes/index.js';
+import errorHandler from './middleware/errorHandler.js';
 import cors from 'cors';
+import { loadMLModel } from './controllers/predictController.js';
 
 const app = express();
 const port = 3001;
@@ -18,6 +19,7 @@ app.get('/', (req, res) => {
 app.use('/', router);
 app.use(errorHandler);
 
-app.listen(port, () => {
-  console.log(`Server berjalan di http://${host}:${port}`);
+app.listen(port, async () => {
+  await loadMLModel();
+  console.log(`\nServer berjalan di http://${host}:${port}`);
 });

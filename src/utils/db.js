@@ -1,80 +1,199 @@
 import 'dotenv/config';
-// import { PrismaPg } from '@prisma/adapter-pg';
-// import { PrismaClient } from '@prisma/client';
 import { Pool } from 'pg';
 import bcrypt from 'bcrypt';
 import { DBError } from '../exceptions/index.js';
 import token_manager from '../security/token-manager.js';
 import { nanoid } from 'nanoid';
 
-// const connectionString = process.env.DATABASE_URL;
-// if (!connectionString) {
-//   throw new Error('DATABASE_URL tidak ditemukan. Tambahkan DATABASE_URL di file .env atau environment Anda.');
-// }
-// const adapter = new PrismaPg({ connectionString });
-// const prisma = new PrismaClient({ adapter });
-
 const pool = new Pool();
 
-// # UNTUK VALIDASI SAJA
-async function searchData(key, value) {
+// ==========================================
+// HELPER FUNCTIONS (Internal)
+// ==========================================
+
+async function getUserByEmail(email) {
   const query = {
-    text: `SELECT * FROM users WHERE ${key}=$1`,
-    values: [value],
+    text: 'SELECT * FROM users WHERE email = $1',
+    values: [email],
   };
   return (await pool.query(query)).rows[0];
 }
 
-async function createUser({ email, username, password }) {
-  // # PRISMA
-  // if (await prisma.user.findUnique({ where: { email } }))
-  //   return {
-  //     status: 'fail',
-  //     message: 'Akun dengan Email ini sudah terdaftar',
-  //   };
+async function getUserByIdHelper(id) {
+  const query = {
+    text: 'SELECT * FROM users WHERE id = $1',
+    values: [id],
+  };
+  return (await pool.query(query)).rows[0];
+}
 
-  if (await searchData('email', email))
+// ==========================================
+// USERS & AUTHENTICATION
+// ==========================================
+
+async function createUser({ email, username, password }) {
+  const existingUser = await getUserByEmail(email);
+  if (existingUser) {
     return {
       status: 'fail',
       message: 'Akun dengan Email ini sudah terdaftar',
     };
+  }
 
   const saltRounds = 12;
   const passHash = await bcrypt.hash(password, saltRounds);
+  const id = nanoid(8);
 
   try {
-    // # PRISMA
-    // const user = await prisma.user.create({
-    //   data: {
-    //     email,
-    //     username,
-    //     password: passHash,
-    //   },
-    // });
-
-    // # QUERY MANUAL
-    const id = nanoid(8);
     const query = {
-      text: 'INSERT INTO users (id, email, username, password) VALUES ($1, $2, $3, $4) RETURNING *',
+      text: 'INSERT INTO users (id, email, username, password) VALUES ($1, $2, $3, $4) RETURNING id, email, username',
       values: [id, email, username, passHash],
     };
-    const result = (await pool.query(query)).rows[0];
 
-    // # PRISMA
-    // return {
-    //   status: 'success',
-    //   data: { email, userId: user.id },
-    // };
+    const result = (await pool.query(query)).rows[0];
 
     return {
       status: 'success',
-      data: { email: result.email, userId: result.id },
+      data: {
+        email: result.email,
+        userId: result.id,
+      },
     };
   } catch (err) {
-    console.error(err);
-    throw new DBError('Terjadi kesalahan pada Database');
+    console.error('[DB ERROR - createUser]:', err.message);
+    throw new DBError('Terjadi kesalahan pada Database saat membuat akun');
   }
 }
+
+async function loginUser({ email, password }) {
+  try {
+    const user = await getUserByEmail(email);
+
+    if (!user) {
+      return {
+        status: 'fail',
+        message: 'Email tidak ditemukan',
+      };
+    }
+
+    const comparePass = await bcrypt.compare(password, user.password);
+    if (!comparePass) {
+      return {
+        status: 'fail',
+        message: 'Password salah',
+      };
+    }
+
+    // Cek apakah user sudah memiliki refresh token aktif
+    const existingTokenQuery = {
+      text: 'SELECT token FROM "refreshToken" WHERE "userId" = $1 LIMIT 1',
+      values: [user.id],
+    };
+    const existingTokenResult = await pool.query(existingTokenQuery);
+    let refreshToken = existingTokenResult.rows[0]?.token;
+
+    // Buat token baru jika belum ada
+    if (!refreshToken) {
+      refreshToken = await token_manager.generatedRefreshToken({
+        id: user.id,
+        email: user.email,
+        username: user.username,
+      });
+
+      const insertTokenQuery = {
+        text: 'INSERT INTO "refreshToken" (token, "userId") VALUES ($1, $2)',
+        values: [refreshToken, user.id],
+      };
+      await pool.query(insertTokenQuery);
+    }
+
+    return {
+      status: 'success',
+      data: {
+        id: user.id,
+        email: user.email,
+        username: user.username,
+        refreshToken,
+      },
+    };
+  } catch (error) {
+    console.error('[DB ERROR - loginUser]:', error.message);
+    throw new DBError('Terjadi kesalahan pada server saat proses login');
+  }
+}
+
+async function getUserById(id) {
+  try {
+    const query = {
+      text: 'SELECT id, email, username FROM users WHERE id = $1',
+      values: [id],
+    };
+
+    return (await pool.query(query)).rows[0] || null;
+  } catch (err) {
+    console.error('[DB ERROR - getUserById]:', err.message);
+    throw new DBError('Terjadi kesalahan pada server');
+  }
+}
+
+async function updateUser({ id, username }) {
+  try {
+    const user = await getUserByIdHelper(id);
+
+    if (!user) {
+      return {
+        status: 'fail',
+        message: 'Akun tidak ditemukan',
+      };
+    }
+
+    const query = {
+      text: 'UPDATE users SET username = $1, update_at = CURRENT_TIMESTAMP WHERE id = $2 RETURNING username',
+      values: [username, id],
+    };
+
+    const result = (await pool.query(query)).rows[0];
+
+    return {
+      status: 'success',
+      data: { username: result.username },
+    };
+  } catch (err) {
+    console.error('[DB ERROR - updateUser]:', err.message);
+    throw new DBError('Terjadi kesalahan pada Database saat memperbarui user');
+  }
+}
+
+async function deleteUser({ id }) {
+  try {
+    const user = await getUserByIdHelper(id);
+
+    if (!user) {
+      return {
+        status: 'fail',
+        message: 'Akun tidak ditemukan',
+      };
+    }
+
+    const query = {
+      text: 'DELETE FROM users WHERE id = $1',
+      values: [id],
+    };
+    await pool.query(query);
+
+    return {
+      status: 'success',
+      message: 'Akun berhasil dihapus',
+    };
+  } catch (error) {
+    console.error('[DB ERROR - deleteUser]:', error.message);
+    throw new DBError('Terjadi kesalahan pada server saat menghapus akun');
+  }
+}
+
+// ==========================================
+// RESUMES & JOBS
+// ==========================================
 
 async function saveResume({ userId, filename, parsedText }) {
   try {
@@ -97,11 +216,55 @@ async function saveResume({ userId, filename, parsedText }) {
       },
     };
   } catch (err) {
-    console.error(err);
-    throw new DBError('Terjadi kesalahan pada Database');
+    console.error('[DB ERROR - saveResume]:', err.message);
+    throw new DBError('Terjadi kesalahan pada Database saat menyimpan resume');
   }
 }
+async function getUserResumes(userId) {
+  try {
+    const query = {
+      text: 'SELECT id, "userId", filename, "parsedText", upload_at FROM resumes WHERE "userId" = $1 ORDER BY upload_at DESC',
+      values: [userId],
+    };
 
+    return (await pool.query(query)).rows;
+  } catch (err) {
+    console.error('[DB ERROR - getUserResumes]:', err.message);
+    throw new DBError('Terjadi kesalahan pada server saat mengambil resume');
+  }
+}
+async function getUserHistory(userId) {
+  try {
+    const resumesQuery = {
+      text: 'SELECT id, filename, "parsedText", upload_at FROM resumes WHERE "userId" = $1 ORDER BY upload_at DESC',
+      values: [userId],
+    };
+    const resumes = (await pool.query(resumesQuery)).rows;
+
+    if (resumes.length === 0) {
+      return [];
+    }
+
+    const resumeIds = resumes.map((resume) => resume.id);
+    const jobsQuery = {
+      text: 'SELECT id, "resumeId", title, description, company, url, created_at FROM jobs WHERE "resumeId" = ANY($1) ORDER BY created_at DESC',
+      values: [resumeIds],
+    };
+    const jobs = (await pool.query(jobsQuery)).rows;
+
+    const history = resumes.map((resume) => {
+      return {
+        ...resume,
+        jobs: jobs.filter((job) => job.resumeId === resume.id),
+      };
+    });
+
+    return history;
+  } catch (err) {
+    console.error('[DB ERROR - getUserHistory]:', err.message);
+    throw new DBError('Terjadi kesalahan pada server saat mengambil riwayat data');
+  }
+}
 async function saveJob({ resumeId, title, description, company, url }) {
   try {
     const id = nanoid(8);
@@ -125,38 +288,14 @@ async function saveJob({ resumeId, title, description, company, url }) {
       },
     };
   } catch (err) {
-    console.error(err);
-    throw new DBError('Terjadi kesalahan pada Database');
+    console.error('[DB ERROR - saveJob]:', err.message);
+    throw new DBError('Terjadi kesalahan pada Database saat menyimpan job');
   }
 }
 
-async function getUserById(id) {
-  try {
-    const query = {
-      text: 'SELECT id, email, username FROM users WHERE id = $1',
-      values: [id],
-    };
-
-    return (await pool.query(query)).rows[0] || null;
-  } catch (err) {
-    console.error(err);
-    throw new DBError('Terjadi kesalahan pada server');
-  }
-}
-
-async function getUserResumes(userId) {
-  try {
-    const query = {
-      text: 'SELECT id, "userId", filename, "parsedText", upload_at FROM resumes WHERE "userId" = $1 ORDER BY upload_at DESC',
-      values: [userId],
-    };
-
-    return (await pool.query(query)).rows;
-  } catch (err) {
-    console.error(err);
-    throw new DBError('Terjadi kesalahan pada server');
-  }
-}
+// ==========================================
+// TOKENS (REFRESH TOKEN)
+// ==========================================
 
 async function deleteRefreshTokenByTokenAndUserId(token, userId) {
   try {
@@ -174,114 +313,7 @@ async function deleteRefreshTokenByTokenAndUserId(token, userId) {
       },
     };
   } catch (err) {
-    console.error(err);
-    throw new DBError('Terjadi kesalahan pada server');
-  }
-}
-
-async function loginUser({ email, password }) {
-  try {
-    // const user = await prisma.user.findUnique({
-    //   where: {
-    //     email,
-    //   },
-    // });
-    const user = await searchData('email', email);
-
-    if (!user)
-      return {
-        status: 'fail',
-        message: 'Email tidak ditemukan',
-      };
-
-    const comparePass = await bcrypt.compare(password, user.password);
-
-    if (comparePass) {
-      const existingTokenQuery = {
-        text: 'SELECT token FROM "refreshToken" WHERE "userId" = $1 LIMIT 1',
-        values: [user.id],
-      };
-      const existingTokenResult = await pool.query(existingTokenQuery);
-      let refreshToken = existingTokenResult.rows[0]?.token;
-
-      if (!refreshToken) {
-        refreshToken = await token_manager.generatedRefreshToken({ id: user.id, email: user.email, username: user.username });
-        const insertTokenQuery = {
-          text: 'INSERT INTO "refreshToken" (token, "userId") VALUES ($1, $2)',
-          values: [refreshToken, user.id],
-        };
-        await pool.query(insertTokenQuery);
-      }
-
-      return {
-        status: 'success',
-        data: {
-          id: user.id,
-          email: user.email,
-          username: user.username,
-          refreshToken,
-        },
-      };
-    } else {
-      return {
-        status: 'fail',
-        message: 'Password salah',
-      };
-    }
-  } catch (error) {
-    console.error(error);
-    throw new DBError('Terjadi kesalahan pada server');
-  }
-}
-
-async function updateUser({ id, username }) {
-  try {
-    const user = await searchData('id', id);
-
-    if (!user)
-      return {
-        status: 'fail',
-        message: 'Akun tidak ditemukan',
-      };
-
-    const query = {
-      text: 'UPDATE users SET username = $1 WHERE id = $2 RETURNING username',
-      values: [username, id],
-    };
-    const result = (await pool.query(query)).rows[0];
-
-    return {
-      status: 'success',
-      data: { username: result.username },
-    };
-  } catch (err) {
-    console.error(err);
-    throw new DBError('Terjadi kesalahan pada Database');
-  }
-}
-
-async function deleteUser({ id }) {
-  try {
-    const user = await searchData('id', id);
-
-    if (!user)
-      return {
-        status: 'fail',
-        message: 'Akun tidak ditemukan',
-      };
-
-    const query = {
-      text: 'DELETE FROM users WHERE id = $1',
-      values: [id],
-    };
-    await pool.query(query);
-
-    return {
-      status: 'success',
-      message: 'Akun berhasil dihapus',
-    };
-  } catch (error) {
-    console.error(error);
+    console.error('[DB ERROR - deleteRefreshTokenByTokenAndUserId]:', err.message);
     throw new DBError('Terjadi kesalahan pada server');
   }
 }
@@ -299,9 +331,9 @@ async function removeExpiredRefreshToken(token) {
       message: 'Refresh token berhasil dihapus',
     };
   } catch (error) {
-    console.error(error);
+    console.error('[DB ERROR - removeExpiredRefreshToken]:', error.message);
     throw new DBError('Terjadi kesalahan pada server');
   }
 }
 
-export { createUser, saveResume, saveJob, getUserById, getUserResumes, deleteRefreshTokenByTokenAndUserId, loginUser, removeExpiredRefreshToken, deleteUser, updateUser };
+export { createUser, saveResume, saveJob, getUserById, getUserResumes, getUserHistory, deleteRefreshTokenByTokenAndUserId, loginUser, removeExpiredRefreshToken, deleteUser, updateUser };

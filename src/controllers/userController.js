@@ -78,6 +78,20 @@ userRouter.put('/profile', async (req, res) => {
   });
 });
 
+userRouter.get('/history', async (req, res, next) => {
+  try {
+    const history = await getUserHistory(req.user.id);
+
+    return res.status(200).json({
+      status: 'success',
+      message: 'Riwayat resume dan lowongan kerja berhasil diambil',
+      data: history,
+    });
+  } catch (err) {
+    next(err);
+  }
+});
+
 userRouter.post('/logout', async (req, res) => {
   const { token } = req.body;
 
