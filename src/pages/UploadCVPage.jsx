@@ -21,13 +21,14 @@ export default function UploadCVPage() {
             return;
         }
 
-        // PENGECEKAN TOKEN DIHAPUS AGAR BISA UPLOAD TANPA LOGIN
-
         setIsAnalyzing(true);
 
         try {
             const formData = new FormData();
-            formData.append("file", file);
+
+            // SOLUSI SAPU JAGAT: Kirim kedua field sekaligus agar backend langsung lolos validasi!
+            formData.append("file", file);       // Mengirim file fisik CV
+            formData.append("name", file.name);  // Mengirim string nama file teks (mengatasi "Field name missing")
 
             const response = await axios.post(
                 "https://9dnnv6l4-3001.asse.devtunnels.ms/upload",
@@ -35,7 +36,6 @@ export default function UploadCVPage() {
                 {
                     headers: {
                         "Content-Type": "multipart/form-data",
-                        // HEADER AUTHORIZATION DIHAPUS
                     },
                 }
             );
@@ -53,7 +53,7 @@ export default function UploadCVPage() {
 
         } catch (error) {
             console.error(error);
-            alert("Gagal terhubung ke backend API. Pastikan server lokal berjalan.");
+            alert("Gagal terhubung ke backend API. Pastikan server dev tunnel Anda berjalan aktif.");
         } finally {
             setIsAnalyzing(false);
         }

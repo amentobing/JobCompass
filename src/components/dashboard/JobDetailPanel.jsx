@@ -1,5 +1,5 @@
 import { motion } from "framer-motion";
-import { X, MapPin, Briefcase, CheckCircle2, ArrowRight } from "lucide-react";
+import { X, MapPin, CheckCircle2, ArrowRight } from "lucide-react";
 
 export default function JobDetailPanel({ job, onClose }) {
     if (!job) return null;
@@ -8,7 +8,7 @@ export default function JobDetailPanel({ job, onClose }) {
         // flex items-center justify-center untuk menaruh kotak tepat di tengah layar
         // p-4 memberikan jarak aman dari tepi layar di HP
         <div className="fixed inset-0 z-[100] flex items-center justify-center p-4 md:p-6">
-            
+
             {/* Latar Belakang Gelap & Blur (Backdrop) */}
             <motion.div
                 initial={{ opacity: 0 }}
@@ -31,7 +31,7 @@ export default function JobDetailPanel({ job, onClose }) {
                 {/* Header Panel */}
                 <div className="bg-white border-b border-slate-100 p-5 md:p-6 flex justify-between items-center z-10 shrink-0">
                     <h2 className="text-lg font-bold text-slate-800">Detail Pekerjaan</h2>
-                    <button 
+                    <button
                         onClick={onClose}
                         className="p-2 bg-slate-50 hover:bg-red-50 text-slate-400 hover:text-red-500 rounded-full transition-colors"
                     >
@@ -49,22 +49,13 @@ export default function JobDetailPanel({ job, onClose }) {
                             <span className="text-slate-500 font-medium text-sm">{job.company}</span>
                         </div>
                         <h1 className="text-3xl font-black text-slate-900 mb-4 leading-tight">{job.title}</h1>
-                        
+
                         <div className="flex flex-wrap gap-3">
                             <span className="flex items-center gap-1.5 bg-slate-50 text-slate-600 font-medium text-sm px-4 py-2 rounded-xl border border-slate-200">
                                 <MapPin size={16} className="text-blue-500" /> {job.location}
                             </span>
-                            <span className="flex items-center gap-1.5 bg-slate-50 text-slate-600 font-medium text-sm px-4 py-2 rounded-xl border border-slate-200">
-                                <Briefcase size={16} className="text-blue-500" /> {job.type}
-                            </span>
                         </div>
                     </div>
-
-                    <div className="mb-8">
-                        <h3 className="text-sm font-bold text-slate-400 uppercase tracking-widest mb-4">Estimasi Gaji</h3>
-                        <p className="text-2xl font-bold text-slate-800">{job.salary}</p>
-                    </div>
-
                     <div className="mb-8">
                         <h3 className="text-sm font-bold text-slate-400 uppercase tracking-widest mb-4">Keahlian Relevan (Dari CV Anda)</h3>
                         {/* Grid disesuaikan menjadi 2 kolom agar lebih rapi di kotak yang lebar */}
@@ -80,21 +71,30 @@ export default function JobDetailPanel({ job, onClose }) {
 
                     {/* Deskripsi Statis */}
                     <div>
-                        <h3 className="text-sm font-bold text-slate-400 uppercase tracking-widest mb-4">Deskripsi Peran</h3>
-                        <p className="text-slate-600 leading-relaxed mb-4">
-                            Sebagai {job.title} di {job.company}, Anda akan bertanggung jawab untuk merancang, membangun, dan memelihara sistem berbasis data yang memiliki dampak langsung terhadap keputusan strategis perusahaan.
-                        </p>
-                        <p className="text-slate-600 leading-relaxed">
-                            Kami mencari seseorang yang proaktif, mampu bekerja dalam tim lintas fungsi, dan memiliki gairah yang kuat terhadap inovasi teknologi masa kini.
-                        </p>
+                        <h3 className="text-sm font-bold text-slate-400 uppercase tracking-widest mb-4">
+                            Deskripsi Peran
+                        </h3>
+
+                        <div
+                            className="prose max-w-none text-slate-600"
+                            dangerouslySetInnerHTML={{
+                                __html: job.description
+                            }}
+                        />
                     </div>
                 </div>
 
                 {/* Footer / Call to Action (Tertahan di bawah) */}
                 <div className="bg-white border-t border-slate-100 p-5 md:p-6 shrink-0">
-                    <button className="w-full flex items-center justify-center gap-2 bg-blue-600 hover:bg-blue-700 text-white font-bold py-4 rounded-xl transition-all shadow-lg shadow-blue-200 hover:-translate-y-1">
-                        Kirim Lamaran Sekarang <ArrowRight size={20} />
-                    </button>
+                    <a
+                        href={job.link}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        className="w-full flex items-center justify-center gap-2 bg-blue-600 hover:bg-blue-700 text-white font-bold py-4 rounded-xl transition-all shadow-lg shadow-blue-200 hover:-translate-y-1"
+                    >
+                        Kirim Lamaran Sekarang
+                        <ArrowRight size={20} />
+                    </a>
                 </div>
 
             </motion.div>

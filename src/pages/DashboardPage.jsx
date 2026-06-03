@@ -4,60 +4,76 @@ import Footer from "../components/landing/Footer";
 import StatsGrid from "../components/dashboard/StatsGrid";
 import JobCard from "../components/dashboard/JobCard";
 import TopMatchCard from "../components/dashboard/TopMatchCard";
-import JobDetailPanel from "../components/dashboard/JobDetailPanel"; 
-import { motion, AnimatePresence } from "framer-motion"; 
+import JobDetailPanel from "../components/dashboard/JobDetailPanel";
+import { motion, AnimatePresence } from "framer-motion";
 
 const containerVariants = { hidden: { opacity: 0 }, visible: { opacity: 1, transition: { staggerChildren: 0.15 } } };
 const itemVariants = { hidden: { opacity: 0, y: 20 }, visible: { opacity: 1, y: 0, transition: { duration: 0.6, ease: "easeOut" } } };
 
 export default function DashboardPage() {
     const [selectedJob, setSelectedJob] = useState(null);
-    
+
     const [dashboardData] = useState(() => {
         const savedData = localStorage.getItem("cvData");
-        
-        if (savedData) {
-            const parsedData = JSON.parse(savedData);
-            const prediction = parsedData.prediction;
-            const jobsList = parsedData.jobs || []; 
-            
-            const baseScore = Math.round(prediction.confidence * 100); 
 
-            // MAPPING DATA ASLI DARI API BACKEND
-            const mappedJobs = jobsList.map((job, index) => {
-                
-                // Ekstrak spesialisasi perusahaan untuk dijadikan label Skills
-                let jobSkills = [prediction.category_name];
-                if (job.organizationData && job.organizationData.spesialities && job.organizationData.spesialities.length > 0) {
-                    // Ambil maksimal 2 spesialisasi yang tidak kosong
-                    const specs = job.organizationData.spesialities.filter(s => s.trim() !== "").slice(0, 2);
-                    jobSkills = [...jobSkills, ...specs];
-                } else {
-                    jobSkills.push("Sesuai Profil AI");
-                }
+        if (savedData) {
+            try {
+                const parsedData = JSON.parse(savedData);
+
+                // 1. Ekstrak Hasil Prediksi AI
+                const prediction = parsedData.prediction || {};
+                const categoryName = prediction.category_name || "Kategori Tidak Diketahui";
+                const baseScore = Math.round((prediction.confidence || 0.92) * 100);
+
+                // 2. PERBAIKAN FATAL: Membaca properti 'jobs' sesuai format asli JSON backend
+                const rawJobs = parsedData.jobs || [];
+
+                // 3. Mapping data array pekerjaan asli dari backend ke komponen UI
+                const finalJobsList = rawJobs.map((job, index) => {
+                    // Membuat tag keahlian berdasarkan spesialisasi dari organizationData
+                    let jobSkills = [categoryName];
+                    if (job.organizationData && Array.isArray(job.organizationData.spesialities)) {
+                        const specs = job.organizationData.spesialities
+                            .filter(s => s && typeof s === 'string' && s.trim() !== "")
+                            .slice(0, 2);
+                        jobSkills = [...jobSkills, ...specs];
+                    } else {
+                        jobSkills.push("Sesuai Profil");
+                    }
+
+                    // Sinkronisasi Lokasi Fleksibel (String maupun Array)
+                    let locationText = "Lokasi Tidak Ditentukan";
+                    if (job.location) {
+                        locationText = Array.isArray(job.location) ? job.location[0] : job.location;
+                    } else if (job.countries) {
+                        locationText = job.countries;
+                    }
+
+                    return {
+                        id: index,
+                        title: job.title || "Posisi Tidak Diketahui",
+                        company: job.organization || "Perusahaan Mitra",
+                        score: index === 0 ? baseScore : Math.max(70, baseScore - (index * 3)),
+                        location: locationText,
+                        type: job.type || "Full-time", 
+                        salary: job.salary || "Negotiable", 
+                        skills: jobSkills,
+                        description: job.description || "Tidak ada deskripsi tersedia.",
+                        link: job.link || "#",
+                        isPrimary: index === 0 // Rekomendasi Utama
+                    };
+                });
 
                 return {
-                    id: index,
-                    title: job.title || "Posisi Tidak Diketahui",
-                    company: job.organization || "Perusahaan Mitra",
-                    score: index === 0 ? baseScore : Math.max(70, baseScore - (index * 2)), 
-                    location: job.location || "Lokasi Tidak Ditentukan", // Data lokasi asli
-                    type: "Full-time",     // Fallback (Belum ada di API)
-                    salary: "Negotiable",  // Fallback (Belum ada di API)
-                    skills: jobSkills,     // Kombinasi prediksi AI & spesialisasi perusahaan
-                    description: job.description || "Tidak ada deskripsi.", 
-                    link: job.link || "#",
-                    organizationData: job.organizationData || null, // Simpan sisa data perusahaan
-                    isPrimary: index === 0 
+                    category: categoryName,
+                    jobs: finalJobsList
                 };
-            });
 
-            return {
-                category: prediction.category_name,
-                jobs: mappedJobs
-            };
+            } catch (error) {
+                console.error("Gagal melakukan parsing data CV:", error);
+            }
         }
-        
+
         return {
             category: "Belum ada CV yang diunggah",
             jobs: []
@@ -92,7 +108,7 @@ export default function DashboardPage() {
                         <div className="mt-16 space-y-12">
                             {topMatch && (
                                 <motion.section variants={itemVariants}>
-                                    <h2 className="text-xl font-bold text-slate-800 mb-6 uppercase tracking-wider text-sm">Rekomendasi Utama</h2>
+                                    <h2 className="text-xs font-bold text-slate-400 uppercase tracking-widest mb-6">Rekomendasi Utama</h2>
                                     <TopMatchCard job={topMatch} onViewDetails={setSelectedJob} />
                                 </motion.section>
                             )}
@@ -100,7 +116,7 @@ export default function DashboardPage() {
                             {otherMatches.length > 0 && (
                                 <motion.section variants={itemVariants}>
                                     <div className="flex justify-between items-center mb-6">
-                                        <h2 className="text-xl font-bold text-slate-800 uppercase tracking-wider text-sm">Peluang Relevan Lainnya</h2>
+                                        <h2 className="text-xs font-bold text-slate-400 uppercase tracking-widest">Peluang Relevan Lainnya</h2>
                                         <span className="text-blue-600 font-semibold text-sm">{otherMatches.length} Pekerjaan Ditemukan</span>
                                     </div>
                                     <div className="grid grid-cols-1 md:grid-cols-2 gap-6">

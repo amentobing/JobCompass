@@ -70,14 +70,6 @@ export default function HeroSection() {
                             Unggah CV Sekarang
                             <ArrowRight size={20} />
                         </motion.button>
-
-                        <motion.button
-                            whileHover={{ scale: 1.05, y: -2, backgroundColor: "#F8FAFC", transition: { ease: "linear", duration: 0.1 } }}
-                            whileTap={{ scale: 0.98 }}
-                            className="flex items-center justify-center gap-2 bg-white border-2 border-slate-200 text-slate-700 hover:bg-slate-50 px-8 py-4 rounded-lg font-bold transition-colors w-full sm:w-auto"
-                        >
-                            Lihat Cara Kerja
-                        </motion.button>
                     </motion.div>
                 </div>
 
