@@ -101,6 +101,7 @@ export default function DashboardPage() {
                         <StatsGrid 
                             topScore={topMatch ? topMatch.score : 0} 
                             totalJobs={dashboardData.jobs.length} 
+                            category={dashboardData.category}
                         />
                     </motion.div>
 

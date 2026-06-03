@@ -1,4 +1,4 @@
-import { Briefcase, MapPin } from "lucide-react";
+import { MapPin } from "lucide-react";
 import { motion } from "framer-motion"; // <-- Import framer-motion
 
 export default function JobCard({ job, onViewDetails }) {
@@ -17,30 +17,27 @@ export default function JobCard({ job, onViewDetails }) {
                     </h3>
                     <p className="text-slate-500 text-sm mt-1 antialiased">{job.company}</p>
                 </div>
-                <div className="flex flex-col items-end">
-                    <span className="text-2xl font-black text-blue-600 antialiased">{job.score}%</span>
-                    <span className="text-[10px] font-bold text-slate-400 uppercase antialiased">Match</span>
-                </div>
             </div>
 
             <div className="flex flex-wrap gap-2 mb-6">
                 <span className="flex items-center gap-1 bg-slate-50 text-slate-600 font-medium text-xs px-3 py-1.5 rounded-lg border border-slate-100">
                     <MapPin size={12} /> {job.location}
                 </span>
-                <span className="flex items-center gap-1 bg-slate-50 text-slate-600 font-medium text-xs px-3 py-1.5 rounded-lg border border-slate-100">
-                    <Briefcase size={12} /> {job.type}
-                </span>
             </div>
 
-            <div className="mt-auto">
-                <div className="text-slate-800 font-bold text-sm mb-4">
-                    {job.salary}
-                </div>
+            <div className="mt-auto flex gap-9">
                 <button
                     onClick={() => onViewDetails(job)}
-                    className="w-full font-bold py-3 rounded-xl transition-colors text-blue-600 bg-blue-50 hover:bg-blue-600 hover:text-white text-sm">
+                    className="flex-1 font-bold py-3 rounded-xl transition-colors text-blue-600 bg-blue-50 hover:bg-blue-600 hover:text-white text-sm">
                     Review Details
                 </button>
+                    <a
+                    href={job.link}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="flex-1 text-center font-bold py-3 rounded-xl transition-colors text-white bg-blue-600 hover:bg-blue-700 text-sm">
+                        Apply Now
+                    </a>
             </div>
         </motion.div>
     );
