@@ -23,17 +23,57 @@ exports.up = (pgm) => {
       type: 'TEXT',
       notNull: true,
     },
-    description: {
+    organization: {
       type: 'TEXT',
       notNull: true,
     },
-    company: {
+    location: {
+      type: 'TEXT',
+      notNull: false,
+    },
+    countries: {
+      type: 'TEXT',
+      notNull: false,
+    },
+    description: {
       type: 'TEXT',
       notNull: true,
     },
     url: {
       type: 'TEXT',
       notNull: true,
+    },
+    org_url: {
+      type: 'TEXT',
+      notNull: false,
+    },
+    org_employees: {
+      type: 'INTEGER',
+      notNull: false,
+    },
+    org_slogan: {
+      type: 'TEXT',
+      notNull: false,
+    },
+    org_industry: {
+      type: 'TEXT',
+      notNull: false,
+    },
+    org_specialties: {
+      type: 'TEXT',
+      notNull: false,
+    },
+    org_locations: {
+      type: 'TEXT',
+      notNull: false,
+    },
+    org_description: {
+      type: 'TEXT',
+      notNull: false,
+    },
+    org_followers: {
+      type: 'INTEGER',
+      notNull: false,
     },
     created_at: {
       type: 'TIMESTAMP',

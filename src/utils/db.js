@@ -265,12 +265,32 @@ async function getUserHistory(userId) {
     throw new DBError('Terjadi kesalahan pada server saat mengambil riwayat data');
   }
 }
-async function saveJob({ resumeId, title, description, company, url }) {
+async function saveJob({ resumeId, title, organization, location, countries, description, url, org_url, org_employees, org_slogan, org_industry, org_specialties, org_locations, org_description, org_followers }) {
   try {
     const id = nanoid(8);
     const query = {
-      text: 'INSERT INTO jobs (id, "resumeId", title, description, company, url) VALUES ($1, $2, $3, $4, $5, $6) RETURNING *',
-      values: [id, resumeId, title, description, company, url],
+      text: `INSERT INTO jobs (
+        id, "resumeId", title, organization, location, countries, description, url,
+        org_url, org_employees, org_slogan, org_industry, org_specialties, org_locations, org_description, org_followers
+      ) VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11, $12, $13, $14, $15, $16) RETURNING *`,
+      values: [
+        id,
+        resumeId,
+        title,
+        organization,
+        location,
+        countries,
+        description,
+        url,
+        org_url,
+        org_employees,
+        org_slogan,
+        org_industry,
+        org_specialties ? JSON.stringify(org_specialties) : null,
+        org_locations ? JSON.stringify(org_locations) : null,
+        org_description,
+        org_followers,
+      ],
     };
 
     const result = (await pool.query(query)).rows[0];
@@ -281,9 +301,21 @@ async function saveJob({ resumeId, title, description, company, url }) {
         id: result.id,
         resumeId: result.resumeId,
         title: result.title,
+        organization: result.organization,
+        location: result.location,
+        countries: result.countries,
         description: result.description,
-        company: result.company,
         url: result.url,
+        organizationData: {
+          url: result.org_url,
+          employees: result.org_employees,
+          slogan: result.org_slogan,
+          industry: result.org_industry,
+          specialties: result.org_specialties ? JSON.parse(result.org_specialties) : [],
+          locations: result.org_locations ? JSON.parse(result.org_locations) : [],
+          description: result.org_description,
+          followers: result.org_followers,
+        },
         created_at: result.created_at,
       },
     };

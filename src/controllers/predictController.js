@@ -134,35 +134,41 @@ export default async function predictCVController(req, res, next) {
     const jobs = await linkedinAPI(prediction.category_name);
 
     // 1. Simpan Resume ke Database
-    const resumeResult = await saveResume({
-      userId: req.user.id,
-      filename: req.file.originalname,
-      parsedText,
-    });
-    if (resumeResult.status === 'fail') {
-      return res.status(400).json({
-        status: 'fail',
-        message: resumeResult.message,
-      });
-    }
+    // const resumeResult = await saveResume({
+    //   userId: req.user.id,
+    //   filename: req.file.originalname,
+    //   parsedText,
+    // });
+    // if (resumeResult.status === 'fail') {
+    //   return res.status(400).json({
+    //     status: 'fail',
+    //     message: resumeResult.message,
+    //   });
+    // }
 
-    const resumeId = resumeResult.data.id;
-    const savedJobs = [];
-    // 2. Simpan Hasil Lowongan Kerja (RapidAPI) yang berkaitan dengan resumeId ini
-    if (jobs && Array.isArray(jobs)) {
-      for (const job of jobs) {
-        const jobResult = await saveJob({
-          resumeId,
-          title: job.title,
-          description: job.description,
-          company: job.organization, // Pemetaan dari 'organization' ke kolom 'company'
-          url: job.link, // Pemetaan dari 'link' ke kolom 'url'
-        });
-        if (jobResult.status === 'success') {
-          savedJobs.push(jobResult.data);
-        }
-      }
-    }
+    // const resumeId = resumeResult.data.id;
+    // // 2. Simpan Hasil Lowongan Kerja (RapidAPI) yang berkaitan dengan resumeId ini
+    // if (jobs && Array.isArray(jobs)) {
+    //   for (const job of jobs) {
+    //     const jobResult = await saveJob({
+    //       resumeId,
+    //       title: job.title,
+    //       organization: job.organization,
+    //       location: job.location,
+    //       countries: job.countries,
+    //       description: job.description,
+    //       url: job.link,
+    //       org_url: job.organizationData?.url,
+    //       org_employees: job.organizationData?.employees,
+    //       org_slogan: job.organizationData?.slogan,
+    //       org_industry: job.organizationData?.industry,
+    //       org_specialties: job.organizationData?.spesialities,
+    //       org_locations: job.organizationData?.location,
+    //       org_description: job.organizationData?.description,
+    //       org_followers: job.organizationData?.followers,
+    //     });
+    //   }
+    // }
 
     res.json({
       status: 'success',
