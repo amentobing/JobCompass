@@ -1,4 +1,5 @@
 import response from '../utils/response.js';
+import multer from 'multer';
 import { ClientError } from '../exceptions/index.js';
 
 const errorHandler = (err, req, res, next) => {
@@ -8,6 +9,13 @@ const errorHandler = (err, req, res, next) => {
       console.error(err);
     }
     return response(res, err.statusCode, err.message, body);
+  }
+
+  if (err instanceof multer.MulterError || err.name === 'MulterError') {
+    const message = err.code === 'LIMIT_UNEXPECTED_FILE'
+      ? 'Field upload salah. Gunakan name field "file" untuk upload PDF.'
+      : err.message;
+    return response(res, 400, message, null);
   }
 
   if (err.isJoi) {
