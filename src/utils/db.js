@@ -5,7 +5,9 @@ import { DBError } from '../exceptions/index.js';
 import token_manager from '../security/token-manager.js';
 import { nanoid } from 'nanoid';
 
-const pool = new Pool();
+const pool = new Pool({
+  connectionString: process.env.pgConnectionString,
+});
 
 // ==========================================
 // HELPER FUNCTIONS (Internal)
