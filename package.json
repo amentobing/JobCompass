@@ -2,13 +2,16 @@
   "name": "jobcompass",
   "version": "1.0.0",
   "description": "Repositori ini dibuat demi kelancaran pengerjaan Capstone Project kami",
+  "engines": {
+    "node": "16.x"
+  },
   "license": "ISC",
   "author": "",
   "type": "module",
   "main": "src/server.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
-    "start": "npx tsx src/server.js",
+    "start": "node src/server.js",
     "dev": "nodemon ./src/server.js",
     "migrate": "node-pg-migrate"
   },
