@@ -33,7 +33,7 @@ export default function UploadCVPage() {
             formData.append("name", file.name);  
 
             const response = await axios.post(
-                "https://9dnnv6l4-3001.asse.devtunnels.ms/upload",
+                "https://jobcompass-production.up.railway.app/upload",
                 formData,
                 {
                     headers: {
