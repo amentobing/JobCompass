@@ -18,20 +18,14 @@
   "dependencies": {
     "@tensorflow/tfjs-node": "^4.22.0",
     "axios": "^1.16.1",
-    "bcrypt": "^6.0.0",
     "cors": "^2.8.6",
     "dotenv": "^17.4.2",
     "express": "^5.2.1",
-    "joi": "^18.2.1",
-    "jsonwebtoken": "^9.0.3",
     "multer": "^2.1.1",
-    "nanoid": "^5.1.11",
-    "node-pg-migrate": "^6.0.0",
     "nodemon": "^3.1.14",
     "pdf-parser": "^1.0.5",
     "pdf2json": "^4.0.3",
-    "pdfjs-dist": "3.4.120",
-    "pg": "^8.21.0"
+    "pdfjs-dist": "3.4.120"
   },
   "devDependencies": {
     "tsx": "^4.22.0"
