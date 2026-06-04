@@ -28,8 +28,7 @@ const router = Router();
 router.post('/register', validate(registSchema), registHandler);
 router.post('/login', validate(loginSchema), loginHandler);
 
-// router.post('/upload', authenticationToken, upload.single('file'), predictCVController);
-router.post('/upload', upload.single('file'), predictCVController);
+router.post('/upload', authenticationToken, upload.single('file'), predictCVController);
 
 router.use('/user', authenticationToken, userRouter);
 
