@@ -1,164 +1,93 @@
-# Dokumentasi API JobCompass
+# JobCompass Backend
 
-## Ringkasan
+Backend ini adalah server Node.js/Express untuk proyek Capstone JobCompass.
+Server menerima unggahan file CV PDF, mengekstrak teks, melakukan prediksi kategori pekerjaan menggunakan model TensorFlow, dan mengambil rekomendasi pekerjaan dari LinkedIn Job Search API.
 
-Base URL: `http://localhost:3001`
+## Fitur Utama
 
-API ini menyediakan fungsi:
+- Express server dengan endpoint upload PDF
+- Parsing teks PDF menggunakan `pdf2json`
+- Transformasi teks ke TF-IDF dan prediksi kelas dengan model TensorFlow
+- Pencarian pekerjaan berdasarkan hasil prediksi melalui LinkedIn API
+- Middleware error handling dan dukungan CORS
 
-- Registrasi user
-- Login dan penerbitan token
-- Upload PDF resume dan prediksi pekerjaan
-- Penyimpanan resume hasil scan beserta nama file
-- Pengambilan profil user
-- Pengambilan semua resume yang pernah diupload user
-- Update username user
-- Logout dengan menghapus refresh token
-- Verifikasi refresh token
+## Struktur Proyek
 
----
+- `src/server.js` - entry point server
+- `src/routes/index.js` - router Express dengan endpoint `/upload`
+- `src/controllers/predictController.js` - controller prediksi CV
+- `src/utils/linkedin-api.js` - integrasi dengan LinkedIn Job Search API
+- `src/utils/response.js` - helper response JSON
+- `src/middleware/errorHandler.js` - penanganan error global
+- `src/exceptions/` - class exception khusus
+- `src/ml-model/` - model TensorFlow dan konfigurasi vectorizer
 
-## Format Respons Umum
+## Prasyarat
 
-Semua respons memiliki format JSON berikut:
+- Node.js 16.x
+- Paket npm terinstal
+- Koneksi internet untuk memanggil LinkedIn Job Search API
 
-```json
-{
-  "status": "success" | "fail",
-  "message": "string",
-  "data": { ... }
-}
+## Instalasi
+
+1. Pasang dependensi:
+
+```bash
+npm install
 ```
 
-- `status: success` → operasi berhasil
-- `status: fail` → operasi gagal
-- `data` dapat berisi objek, array, atau properti lainnya
+2. Tambahkan file `.env` di root proyek untuk variabel lingkungan berikut:
 
----
-
-## 1. Registrasi User
-
-### Endpoint
-
-`POST /register`
-
-### Deskripsi
-
-Mendaftarkan user baru ke sistem.
-
-### Request Body
-
-`Content-Type: application/json`
-
-```json
-{
-  "email": "user@example.com",
-  "username": "user123",
-  "password": "Abc123!",
-  "confirmPass": "Abc123!"
-}
+```env
+NODE_ENV=development
+rapidkey_1=your_rapidapi_key_1
+rapidkey_2=your_rapidapi_key_2
+rapidkey_3=your_rapidapi_key_3
+rapidkey_4=your_rapidapi_key_4
+rapidkey_5=your_rapidapi_key_5
+rapidhost=linkedin-job-search-api.p.rapidapi.com
 ```
 
-### Respons Sukses
+> `rapidkey_*` bersifat opsional jika hanya satu kunci yang tersedia, tetapi kode mendukung beberapa kunci untuk fallback.
 
-```json
-{
-  "status": "success",
-  "message": "User telah ditambahkan, silahkan login menggunakan username dan password yang terdaftar",
-  "data": {
-    "email": "user@example.com",
-    "userId": "abc12345"
-  }
-}
+## Menjalankan Server
+
+- Jalankan server biasa:
+
+```bash
+npm start
 ```
 
-### Respons Gagal
+- Jalankan dengan `nodemon` untuk pengembangan:
 
-```json
-{
-  "status": "fail",
-  "message": "Akun dengan Email ini sudah terdaftar"
-}
+```bash
+npm run dev
 ```
 
----
+Server akan berjalan di `http://localhost:3001`.
 
-## 2. Login
+## Endpoint API
 
-### Endpoint
+### `GET /`
 
-`POST /login`
+Respons:
 
-### Deskripsi
+- status code `200`
+- Pesan `Server sudah berjalan! 🚀`
 
-Melakukan login dan mengembalikan `accessToken` dan `refreshToken`.
+### `POST /upload`
 
-### Request Body
+Upload file PDF CV menggunakan form-data dengan field `file`.
 
-`Content-Type: application/json`
-
-```json
-{
-  "email": "user@example.com",
-  "password": "Abc123!"
-}
-```
-
-### Respons Sukses
-
-```json
-{
-  "status": "success",
-  "message": "Berhasil login",
-  "data": {
-    "accessToken": "eyJhbGciOi...",
-    "refreshToken": "eyJhbGciOi..."
-  }
-}
-```
-
-### Respons Gagal
-
-```json
-{
-  "status": "fail",
-  "message": "Email tidak ditemukan"
-}
-```
-
----
-
-## 3. Upload Resume dan Prediksi Job
-
-### Endpoint
-
-`POST /upload`
-
-### Deskripsi
-
-Mengunggah file PDF resume, melakukan ekstraksi teks, menyimpan resume ke database, dan mencari pekerjaan yang relevan.
-
-### Autentikasi
-
-- Wajib: `Authorization: Bearer <accessToken>`
-
-### Request
-
-`Content-Type: multipart/form-data`
-
-Field:
-
-- `file`: file PDF
-
-### Contoh Request
+Contoh menggunakan `curl`:
 
 ```bash
 curl -X POST http://localhost:3001/upload \
-  -H "Authorization: Bearer <accessToken>" \
-  -F "file=@/path/to/resume.pdf"
+  -H "Content-Type: multipart/form-data" \
+  -F "file=@/path/to/cv.pdf"
 ```
 
-### Respons Sukses
+Response sukses:
 
 ```json
 {
@@ -167,240 +96,52 @@ curl -X POST http://localhost:3001/upload \
   "data": {
     "prediction": {
       "category_name": "Information Technology",
-      "confidence": 0.9231,
+      "confidence": 0.9245,
       "all_probabilities": {
         "Human Resources": 0.0123,
-        "Customer Service": 0.0111,
-        "Sales & Business Development": 0.0212,
-        "Finance & Accounting": 0.0312,
-        "Information Technology": 0.9231,
-        "Operations": 0.0005,
-        "Healthcare": 0.0004,
-        "Education": 0.0002,
+        "Information Technology": 0.9245,
+        "Sales & Business Development": 0.0632,
+        "Finance & Accounting": 0.0,
+        "Operations": 0.0,
+        "Healthcare": 0.0,
+        "Education": 0.0,
         "Design & Creative": 0.0
       }
     },
     "jobs": [
       {
-        "title": "Frontend Developer",
+        "title": "...",
+        "organization": "...",
+        "location": "...",
         "description": "...",
-        "organization": "Example Company",
-        "link": "https://example.com/job/123"
+        "link": "..."
       }
     ]
   }
 }
 ```
 
-### Respons Gagal
+## Aturan Upload
 
-```json
-{
-  "status": "fail",
-  "message": "Tidak dapat menemukan file PDF"
-}
-```
+- Hanya menerima file PDF
+- Maksimum ukuran file: `2 MB`
 
----
+Jika format tidak valid, server akan merespons dengan error khusus `InvalidFileType`.
 
-## 4. Verifikasi Refresh Token
+## Catatan Teknis
 
-### Endpoint
+- Model TensorFlow dimuat saat server start melalui `loadMLModel()`
+- Teks dari PDF diekstrak dan diolah menjadi vektor TF-IDF
+- Prediksi model menggunakan `@tensorflow/tfjs-node`
+- Data pekerjaan diambil melalui API RapidAPI LinkedIn Job Search
 
-`GET /user/token`
+## Pengembangan Lanjutan
 
-### Deskripsi
+- Tambahkan validasi file yang lebih kuat
+- Tingkatkan ekstraksi teks PDF untuk dokumen kompleks
+- Tambahkan autentikasi dan logging
+- Buat endpoint tambahan untuk status/model health check
 
-Memverifikasi refresh token dan menghasilkan `accessToken` baru.
+## Lisensi
 
-### Request Body
-
-`Content-Type: application/json`
-
-```json
-{
-  "token": "<refreshToken>"
-}
-```
-
-### Respons Sukses
-
-```json
-{
-  "status": "success",
-  "message": "Token valid",
-  "data": {
-    "accessToken": "eyJhbGciOi..."
-  }
-}
-```
-
----
-
-## 5. Ambil Profil User
-
-### Endpoint
-
-`GET /user/profile`
-
-### Deskripsi
-
-Mengambil data profil user dan semua resume yang sudah diupload user.
-
-### Autentikasi
-
-- Wajib: `Authorization: Bearer <accessToken>`
-
-### Respons Sukses
-
-```json
-{
-  "status": "success",
-  "message": "Profil berhasil diambil",
-  "data": {
-    "user": {
-      "id": "abc12345",
-      "email": "user@example.com",
-      "username": "user123"
-    },
-    "resumes": [
-      {
-        "id": "resume1",
-        "userId": "abc12345",
-        "filename": "resume.pdf",
-        "parsedText": "Isi resume...",
-        "upload_at": "2026-06-02T12:34:56.000Z"
-      }
-    ]
-  }
-}
-```
-
----
-
-## 6. Update Username User
-
-### Endpoint
-
-`PUT /user/profile`
-
-### Deskripsi
-
-Memperbarui username user yang sedang login.
-
-### Autentikasi
-
-- Wajib: `Authorization: Bearer <accessToken>`
-
-### Request Body
-
-`Content-Type: application/json`
-
-```json
-{
-  "username": "newUsername"
-}
-```
-
-### Respons Sukses
-
-```json
-{
-  "status": "success",
-  "message": "Username berhasil diperbarui",
-  "data": {
-    "username": "newUsername"
-  }
-}
-```
-
----
-
-## 7. Riwayat Resume dan Job
-
-### Endpoint
-
-`GET /user/history`
-
-### Deskripsi
-
-Mengambil riwayat resume dan daftar pekerjaan yang tersimpan untuk setiap resume.
-
-### Autentikasi
-
-- Wajib: `Authorization: Bearer <accessToken>`
-
-### Respons Sukses
-
-```json
-{
-  "status": "success",
-  "message": "Riwayat resume dan lowongan kerja berhasil diambil",
-  "data": [
-    {
-      "id": "resume1",
-      "filename": "resume.pdf",
-      "parsedText": "Isi resume...",
-      "upload_at": "2026-06-02T12:34:56.000Z",
-      "jobs": [
-        {
-          "id": "job1",
-          "resumeId": "resume1",
-          "title": "Frontend Developer",
-          "description": "...",
-          "company": "Example Company",
-          "url": "https://example.com/job/123",
-          "created_at": "2026-06-02T12:35:01.000Z"
-        }
-      ]
-    }
-  ]
-}
-```
-
----
-
-## 8. Logout
-
-### Endpoint
-
-`POST /user/logout`
-
-### Deskripsi
-
-Menghapus refresh token yang sedang dipakai untuk logout.
-
-### Autentikasi
-
-- Wajib: `Authorization: Bearer <accessToken>`
-
-### Request Body
-
-`Content-Type: application/json`
-
-```json
-{
-  "token": "<refreshToken>"
-}
-```
-
-### Respons Sukses
-
-```json
-{
-  "status": "success",
-  "message": "Logout berhasil",
-  "data": {
-    "deleted": true
-  }
-}
-```
-
----
-
-## 9. Catatan Tambahan
-
-- Semua endpoint `/user/*` memerlukan header `Authorization: Bearer <accessToken>`.
-- Endpoint `GET /user/token` menerima refresh token di body meskipun menggunakan method GET.
-- File upload pada `POST /upload` harus berupa PDF.
-- Resume yang diupload disimpan bersama `filename`, `parsedText`, dan `upload_at`.
+Proyek ini menggunakan lisensi `ISC` sebagaimana tertera di `package.json`.
