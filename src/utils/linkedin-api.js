@@ -60,6 +60,7 @@ export const linkedinAPI = async (title) => {
         return jobs;
       }
     } catch (error) {
+      new Error('Linkedin API Error\n' + error);
       continue;
     }
   }
