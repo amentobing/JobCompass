@@ -2,7 +2,7 @@ import 'dotenv/config';
 import axios from 'axios';
 
 const dotenv = process.env;
-const apiKeys = [dotenv.rapidkey_1, dotenv.rapidkey_2, dotenv.rapidkey_3, dotenv.rapidkey_4];
+const apiKeys = [dotenv.rapidkey_1, dotenv.rapidkey_2, dotenv.rapidkey_3, dotenv.rapidkey_4, dotenv.rapidkey_5];
 
 export const linkedinAPI = async (title) => {
   for (const key of apiKeys) {
