@@ -21,14 +21,16 @@ export default function UploadCVPage() {
             return;
         }
 
+        // 🛡️ PENGECEKAN TOKEN DAN ALUR PROTEKSI LOGIN DIHAPUS TOTAL
+
         setIsAnalyzing(true);
 
         try {
             const formData = new FormData();
 
-            // SOLUSI SAPU JAGAT: Kirim kedua field sekaligus agar backend langsung lolos validasi!
-            formData.append("file", file);       // Mengirim file fisik CV
-            formData.append("name", file.name);  // Mengirim string nama file teks (mengatasi "Field name missing")
+            // Solusi Sapu Jagat tetap dipertahankan agar backend tidak mengembalikan error "Field name missing"
+            formData.append("file", file);       
+            formData.append("name", file.name);  
 
             const response = await axios.post(
                 "https://9dnnv6l4-3001.asse.devtunnels.ms/upload",
@@ -36,12 +38,13 @@ export default function UploadCVPage() {
                 {
                     headers: {
                         "Content-Type": "multipart/form-data",
+                        // 🛡️ HEADER AUTHORIZATION DIHAPUS TOTAL AGAR BEBAS AKSES
                     },
                 }
             );
 
             if (response.data.status === "success") {
-                // Simpan data AI ke Local Storage
+                // Simpan data AI asli ke Local Storage
                 localStorage.setItem("cvData", JSON.stringify(response.data.data));
                 localStorage.setItem("uploadedFileName", file.name);
 

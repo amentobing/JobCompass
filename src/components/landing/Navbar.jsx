@@ -7,13 +7,11 @@ export default function Navbar() {
     const [isOpen, setIsOpen] = useState(false);
     const location = useLocation();
 
-    // State untuk efek kaca
     const [isScrolled, setIsScrolled] = useState(false);
     const { scrollY } = useScroll();
 
-    // Deteksi posisi scroll
     useMotionValueEvent(scrollY, "change", (latest) => {
-        setIsScrolled(latest > 20); // Aktifkan efek kaca jika scroll > 20px
+        setIsScrolled(latest > 20);
     });
 
     const getDesktopLinkStyle = (path) => {
@@ -29,73 +27,87 @@ export default function Navbar() {
     };
 
     return (
-        // Mengubah sticky menjadi fixed dan menambahkan logika background transisi
         <motion.nav
-            className={`fixed top-0 w-full z-50 transition-all duration-300 ease-in-out border-b ${isScrolled
-                    ? "bg-white/80 backdrop-blur-md border-slate-200/50 shadow-sm py-3" // Kaca kabur
-                    : "bg-white border-slate-200 px-6 md:px-10 py-4" // Normal
-                }`}
+            className={`fixed top-0 w-full z-50 transition-all duration-300 ease-in-out border-b ${
+                isScrolled
+                    ? "bg-white/80 backdrop-blur-md border-slate-200/50 shadow-sm py-3"
+                    : "bg-white border-slate-200 px-6 md:px-10 py-4"
+            }`}
         >
-            <div className="max-w-7xl mx-auto flex items-center justify-between px-6 md:px-10">
+            <div className="max-w-7xl mx-auto flex md:grid md:grid-cols-3 items-center justify-between px-6 md:px-10">
 
                 {/* Logo */}
-                <div className="text-2xl font-bold text-blue-600 tracking-tight">
+                <Link
+                    to="/"
+                    className="text-2xl font-bold text-blue-600 tracking-tight text-left"
+                >
                     Job Compass
-                </div>
-                
-                {/* --- DESKTOP MENU --- */}
-                <div className="hidden md:flex items-center gap-10 text-sm">
-                    <Link to="/" className={getDesktopLinkStyle("/")}>
-                        Dashboard
+                </Link>
+
+                {/* Desktop Menu */}
+                <div className="hidden md:flex items-center justify-center gap-10 text-sm">
+                    <Link
+                        to="/"
+                        className={getDesktopLinkStyle("/")}
+                    >
+                        Beranda
                     </Link>
-                    <Link to="/upload" className={getDesktopLinkStyle("/upload")}>
+
+                    <Link
+                        to="/upload"
+                        className={getDesktopLinkStyle("/upload")}
+                    >
                         Upload CV
                     </Link>
-                    <Link to="/dashboard" className={getDesktopLinkStyle("/dashboard")}>
-                        All Jobs
+
+                    <Link
+                        to="/dashboard"
+                        className={getDesktopLinkStyle("/dashboard")}
+                    >
+                        Dashboard
                     </Link>
                 </div>
 
-                {/* --- TOMBOL AUTHENTIKASI --- */}
-                <div className="hidden md:flex items-center gap-6">
-                    <Link
-                        to="/login"
-                        className="text-sm text-blue-600 font-semibold hover:text-blue-700 transition">
-                        Log In
-                    </Link>
-
-                    <Link
-                        to="/register"
-                        className="bg-blue-600 hover:bg-blue-700 transition-all text-white px-5 py-2.5 rounded-lg text-sm font-semibold shadow-sm">
-                        Get Started
-                    </Link>
-                </div>
+                {/* Spacer */}
+                <div className="hidden md:block"></div>
 
                 {/* Mobile Menu Button */}
-                <button className="md:hidden text-slate-600" onClick={() => setIsOpen(!isOpen)}>
+                <button
+                    className="md:hidden text-slate-600"
+                    onClick={() => setIsOpen(!isOpen)}
+                >
                     {isOpen ? <X size={28} /> : <Menu size={28} />}
                 </button>
             </div>
 
-            {/* --- MOBILE MENU --- */}
+            {/* Mobile Menu */}
             {isOpen && (
                 <div className="md:hidden mt-4 flex flex-col gap-4 p-4 bg-white rounded-xl shadow-lg border border-slate-100 mx-6">
-                    <Link to="/" className={getMobileLinkStyle("/")} onClick={() => setIsOpen(false)}>
-                        Dashboard
+
+                    <Link
+                        to="/"
+                        className={getMobileLinkStyle("/")}
+                        onClick={() => setIsOpen(false)}
+                    >
+                        Beranda
                     </Link>
-                    <Link to="/upload" className={getMobileLinkStyle("/upload")} onClick={() => setIsOpen(false)}>
+
+                    <Link
+                        to="/upload"
+                        className={getMobileLinkStyle("/upload")}
+                        onClick={() => setIsOpen(false)}
+                    >
                         Upload CV
                     </Link>
-                    <Link to="/dashboard" className={getMobileLinkStyle("/dashboard")} onClick={() => setIsOpen(false)}>
-                        All Jobs
+
+                    <Link
+                        to="/dashboard"
+                        className={getMobileLinkStyle("/dashboard")}
+                        onClick={() => setIsOpen(false)}
+                    >
+                        Dashboard
                     </Link>
-                    <div className="h-px w-full bg-slate-100 my-2"></div>
-                    <Link to="/login" className={getMobileLinkStyle("/login")} onClick={() => setIsOpen(false)}>
-                        Sign In
-                    </Link>
-                    <Link to="/register" className={getMobileLinkStyle("/register")} onClick={() => setIsOpen(false)}>
-                        Get Started
-                    </Link>
+
                 </div>
             )}
         </motion.nav>
