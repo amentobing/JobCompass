@@ -82,4 +82,6 @@ Selain itu, terdapat `dataset_final.csv` di direktori yang sama, yang merupakan 
 
 Adapun data mentah aslinya (`data/raw/indian-job-market-dataset-2025.xlsx`) didapatkan bersumber dari Kaggle: [Indian Job Market Dataset 2025-2026](https://www.kaggle.com/datasets/shivamshrivastava21/indian-job-market-dataset-2025-2026).
 
+Berikut adalah link hasil deployment dashboard menggunakan streamlit: https://jobcompass-dashboard-cddd9azlaqdfpbgwarfgd6.streamlit.app/
+
 ---
